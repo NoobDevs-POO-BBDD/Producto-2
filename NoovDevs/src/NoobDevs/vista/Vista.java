@@ -1,14 +1,21 @@
 package NoobDevs.vista;
+
+import NoobDevs.controlador.Controlador;
 import java.util.Scanner;
 /*
  * Clase destinada a ser el menú
  */
 public class Vista {
-    //private Controlador controlador;
+    private Controlador controlador;
     private Scanner teclado;
 
     public Vista(){
         this.teclado = new Scanner(System.in);
+    }
+
+    //Método para que el Main pase el controlador a Vista
+    public void setControlador(Controlador controlador){
+        this.controlador = controlador;
     }
 
     public void menu(){
@@ -63,12 +70,71 @@ public class Vista {
 
     }
 
+    /**
+     * En esta función se solicita al usuário si desea añadir nuevo artículo, mostrar todos los artículos o buscar un artículo por código.
+     * el controlador recibe una función con los campos necesarios para realizarla.
+     */
     public void gestionarArticulos(){
+        System.out.println(" ¿Qué acción deseas realizar?: ");
+        System.out.println("1. Añadir nuevo artículo");
+        System.out.println("2. Mostrar artículos");
+        System.out.println("3. Buscar artículo");
+        int opcion = askNumero(3);
 
+        switch (opcion){
+            case 1:
+
+                System.out.println("Introduce el código >> ");
+                String codigo = teclado.nextLine();
+                System.out.println("Introduce la descripción >> ");
+                String descripcion = teclado.nextLine();
+                System.out.println("Introduce el precio de venta >> ");
+                double precioVenta = teclado.nextDouble();
+                teclado.nextLine();
+                System.out.println("Introduce el precio de envío >> ");
+                double gastosEnvio = teclado.nextDouble();
+                teclado.nextLine();
+                System.out.println("Introduce el tiempo de preparación >> ");
+                int tiempoPreparacion = teclado.nextInt();
+                teclado.nextLine();
+
+                //controlador.añadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
+                break;
+
+            case 2:
+                System.out.println("Listado de artículos: ");
+
+                //controlador.mostrarArticulos();
+                break;
+
+            case 3:
+                System.out.println("Introduce el código del artículo a buscar >> ");
+                String codigoBuscar = teclado.nextLine();
+
+               // controlador.buscarArticulo(codigoBuscar);
+                break;
+        }
     }
 
     public void gestionarPedidos(){
+        System.out.println(" ¿Qué acción deseas realizar?: ");
+        System.out.println("1. Añadir nuevo pedido");
+        System.out.println("2. Eliminar pedido");
+        System.out.println("3. Mostrar pedidos pendientes");
+        System.out.println("4. Mostrar pedidos enviados");
+        int opcion = askNumero(4);
 
+        switch (opcion){
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+
+        }
     }
 
     /**
