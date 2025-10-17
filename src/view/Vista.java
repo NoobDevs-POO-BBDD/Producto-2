@@ -1,7 +1,7 @@
-package NoobDevs.vista;
+package view;
 
-import NoobDevs.controlador.Controlador;
-import NoobDevs.modelo.Articulo;
+
+import model.Articulo;
 import NoobDevs.modelo.Cliente;
 import NoobDevs.modelo.Pedido;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Clase destinada a ser el menú principal
  */
 public class Vista {
-    private Controlador controlador;
+    private NoobDevs.controlador.Controlador controlador;
     private Scanner teclado;
 
     public Vista(){
@@ -32,7 +32,7 @@ public class Vista {
             System.out.println("\n---- MENÚ DE OPCIONES: ----");
             System.out.println("1.  Gestionar clientes");  // añadir cliente, mostrar clientes, mostrar clientes estandar, mostrar clientes premium
             System.out.println("2.  Gestionar Artículos"); //añadir artículo, mostrar artículo
-            System.out.println("3.  Gestionar Pedidos"); // añadir pedido, eliminar pedido, mostrar pedidos pendientes, mostrar pedidos enviados.
+            System.out.println("3.  Gestionar Pedido"); // añadir pedido, eliminar pedido, mostrar pedidos pendientes, mostrar pedidos enviados.
             System.out.println("0.  Salir de la aplicación");
             opcion = askNumero(4);
 
@@ -275,7 +275,7 @@ public class Vista {
         }
     }
 
-    //Gestión Pedidos
+    //Gestión Pedido
 
     /**
      * mensaje de pedido añadido correctamente

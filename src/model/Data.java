@@ -1,4 +1,4 @@
-package NoobDevs.modelo;
+package model;
 
 public class Data {
 }

@@ -1,7 +1,7 @@
-package NoobDevs.controlador;
+package controller;
 
-import NoobDevs.vista.Vista;
-import NoobDevs.modelo.Data;
+import view.Vista;
+import model.Data;
 
 public class Controlador {
     private Vista vista;
