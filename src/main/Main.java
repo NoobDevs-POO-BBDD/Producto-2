@@ -26,3 +26,14 @@ public class Main {
     }
 
 }
+
+//según he visto en tutoriales, el main debería quedar así porque tiene que pilla rel codigo de view, pero tampoco estoy segura -annahico
+  
+import view.TiendaView;
+
+public class Main {
+    public static void main(String[] args) {
+        TiendaView vista = new TiendaView();
+        vista.mostrarMenuPrincipal();
+    }
+}
