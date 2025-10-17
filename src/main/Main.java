@@ -1,4 +1,4 @@
-package NoobDevs;
+package NoobDevs.main;
 
 import NoobDevs.modelo.Data;
 import NoobDevs.vista.Vista;
@@ -28,7 +28,7 @@ public class Main {
 }
 
 //según he visto en tutoriales, el main debería quedar así porque tiene que pilla rel codigo de view, pero tampoco estoy segura -annahico
-  
+
 import view.TiendaView;
 
 public class Main {

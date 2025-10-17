@@ -1,6 +1,11 @@
 package NoobDevs.vista;
 
 import NoobDevs.controlador.Controlador;
+import NoobDevs.modelo.Articulo;
+import NoobDevs.modelo.Cliente;
+import NoobDevs.modelo.Pedido;
+
+import java.util.List;
 import java.util.Scanner;
 /*
  * Clase destinada a ser el menú principal
@@ -49,6 +54,8 @@ public class Vista {
         }while(!salir);
     }
 
+
+    //METODOS PREGUNTA AL CONTROLADOR
     /**
      * Función para gestión de clientes, permite añadir nuevo cliente solicitando los datos, Se pasa un booleano con 1
      * true 0 false si es premium, así se puede añadir la cuota y el descuento. Además se muestra el listado de todos
@@ -72,24 +79,19 @@ public class Vista {
                 String domicilio = teclado.nextLine();
                 System.out.print("Introduce el NIF >> ");
                 String nif = teclado.nextLine();
-                System.out.print("Si es cliente prémium pulsa 1 >> ");  //Se pasa un booleano con 1 true 0 false si es premium, así se puede añadir la cuota y el descuento
-                Boolean premium = Boolean.parseBoolean(teclado.nextLine());
+                System.out.print("Si es cliente prémium pulsa 1 >> ");  //Se pasa un booleano con true si es premium, así se puede añadir la cuota y el descuento
+                String entrada = teclado.nextLine();
+                boolean premium = entrada.equals("1");
 
                 controlador.añadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
-                System.out.println("Listado de clientes: ");
-
                 controlador.mostrarClientes();
                 break;
             case 3:
-                System.out.println("Listado de clientes estándar: ");
-
                 controlador.mostrarClientesEstandar();
                 break;
             case 4:
-                System.out.println("Listado de clientes premium: ");
-
                 controlador.mostrarClientesPremium();
                 break;
         }
@@ -124,8 +126,6 @@ public class Vista {
                 break;
 
             case 2:
-                System.out.println("Listado de artículos: ");
-
                 controlador.mostrarArticulos();
                 break;
 
@@ -162,7 +162,7 @@ public class Vista {
                 System.out.print("Introduce la cantidad >> ");
                 int cantidad = Integer.parseInt(teclado.nextLine());
 
-                controlador.añadirPedido();
+                controlador.añadirPedido(numeroPedido,cliente,articulo,cantidad);
                 break;
             case 2:
                 System.out.print("Introduce el número de pedido >> ");
@@ -171,19 +171,160 @@ public class Vista {
                 controlador.eliminarPedido(numeroPedidoBorrar);
                 break;
             case 3:
-                System.out.println("Listado de pedidos pendientes: ");
-
                 controlador.mostarPedidosPendientes();
                 break;
             case 4:
-                System.out.println("Listado de pedidos enviados: ");
-
                 controlador.mostrarPedidosEnviados();
                 break;
 
         }
     }
 
+
+
+    //METODOS RESPUESTA DEL CONTROLADOR
+
+    //Gestión clientes
+    /**
+     * muestra mensaje cliente añadido correctamente
+     */
+    public void clienteAñadido(){
+        System.out.println("Cliente añadido correctamente");
+    }
+
+    /**
+     * muestra mensaje si no hay clientes registrados y lista clientes si hay.
+     * @param lista
+     */
+    public void mostrarListaClientes(List<Cliente> lista){
+        if (lista.isEmpty()){
+            System.out.println("No hay clientes registrados.");
+        }else{
+            System.out.println("Listado de clientes: ");
+            for ( Cliente cliente : lista ){
+                System.out.println(cliente.toString());
+            }
+        }
+    }
+
+    /**
+     * muestra mensaje si no hay clientes registrados y lista clientes estandar si hay.
+     * @param listaStandar
+     */
+    public void mostarListaClientesEstandar(List<Cliente> listaStandar){
+        if (listaStandar.isEmpty()){
+            System.out.println("No hay clientes estándar registrados.");
+        }else{
+            System.out.println("Listado de clientes estándar: ");
+            for ( Cliente cliente : listaStandar){
+                System.out.println(cliente.toString());
+            }
+        }
+    }
+
+    /**
+     * muestra mensaje si no hay clientes registrados y lista clientes estandar si hay.
+     * @param listaPremium
+     */
+    public void mostrarListaClientesPremium(List<Cliente> listaPremium){
+        if (listaPremium.isEmpty()){
+            System.out.println("No hay clientes premium registrados.");
+        }else{
+            System.out.println("Listado de clientes premium: ");
+            for ( Cliente cliente : listaPremium){
+                System.out.println(cliente.toString());
+            }
+        }
+    }
+
+
+    //Gestión Artículos
+
+    /**
+     * muestra mensaje de cliente añadido correctamente
+     */
+    public void articuloAñadido(){
+        System.out.println("Artículo añadido correctamente");
+    }
+
+    /**
+     * mostrar lista de articulos si hay registrados.
+     * @param lista
+     */
+    public void mostrarListaArticulos(List<Articulo> lista){
+        if (lista.isEmpty()){
+            System.out.println("No hay artículos registrados.");
+        }else{
+            System.out.println("Listado de artículos: ");
+
+            for (Articulo articulo : lista){
+                System.out.println(articulo.toString());
+            }
+        }
+    }
+
+    /**
+     * devuelve el artículo buscado por el código o un mensaje de artículo no encontrado.
+     * @param articulo
+     */
+    public void articuloBuscado(Articulo articulo){
+        if (articulo == null){
+            System.out.println("Artículo no encontrado, revisa el código introducido.");
+        }else{
+            System.out.println(articulo.toString());
+        }
+    }
+
+    //Gestión Pedidos
+
+    /**
+     * mensaje de pedido añadido correctamente
+     */
+    public void pedidoAñadido(){
+        System.out.println("Pedido añadido correctamente.");
+    }
+
+    /**
+     * mensaje de pedido eliminado correctamente
+     */
+    public void pedidoEliminado(){
+        System.out.println("Pedido eliminado correctamente.");
+    }
+
+    /**
+     * muestra los pedidos pendientes si hay.
+     * @param pedidosPendientes
+     */
+    public void mostrarListaPedidosPendientes(List<Pedido> pedidosPendientes){
+        if (pedidosPendientes.isEmpty()){
+            System.out.println("No hay pedidos pendientes.");
+        }else{
+            System.out.println("Listado de pedidos pendientes: ");
+
+            for (Pedido pedido : pedidosPendientes){
+                System.out.println(pedido.toString());
+            }
+        }
+    }
+
+    /**
+     * muestra los pedidos enviados si hay.
+     * @param pedidosEnviados
+     */
+    public void mostrarListaPedidosEnviados(List<Pedido> pedidosEnviados){
+        if (pedidosEnviados.isEmpty()){
+            System.out.println("No hay pedidos pendientes.");
+        }else{
+            System.out.println("Listado de pedidos pendientes: ");
+
+            for (Pedido pedido : pedidosEnviados){
+                System.out.println(pedido.toString());
+            }
+        }
+    }
+
+
+    //OTROS METODOS
     /**
      * Pide el íncide a buscar, comprueba que este sea un número válido.
      * @param max tamaño máximo de la lista que se quiere recorrer.
