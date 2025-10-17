@@ -1,6 +1,28 @@
 package NoobDevs;
 
-public class Main {
+import NoobDevs.modelo.Data;
+import NoobDevs.vista.Vista;
+import NoobDevs.controlador.Controlador;
 
-    //Pienso que aquí deberemos iniciar el controlador (el controlador iniciará modelo y vista)
+/**
+ * Clase principal dónde se une el modelo la vista y el controlador.
+ */
+public class Main {
+    public static void main(String[] args){
+        //Se crea el modelo
+        Data modelo = new Data();
+
+        //Se crea la vista
+        Vista vista = new Vista();
+
+        //Se crea el controlador pasandole la vista y el modelo
+        Controlador controlador = new Controlador(vista, modelo);
+
+        //Se manda a vista el controlador para que puedan interactuar
+        vista.setControlador(controlador);
+
+        //Se inicia la aplicación meidiante el controlador
+        controlador.iniciar();
+    }
+
 }
