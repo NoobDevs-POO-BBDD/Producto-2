@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Pedidos {
+public class Pedido {
     private String numeroPedido;
     private Cliente cliente;
     private Articulo articulo;
@@ -9,7 +9,7 @@ public class Pedidos {
     private boolean estado;
 
     //constructor
-    public Pedidos(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDate fechaHora, boolean estado) {
+    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDate fechaHora, boolean estado) {
         this.numeroPedido = numeroPedido;
         this.cliente = cliente;
         this.articulo = articulo;
