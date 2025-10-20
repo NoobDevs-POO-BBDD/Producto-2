@@ -1,3 +1,5 @@
+package model;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,7 +21,7 @@ public class Pedido {
         this.cantidad = cantidad;
         this.fechaPedido = fechaPedido;
         this.enviado = enviado;
-    }
+    };
 
     //  CONSTRUCTOR PARA PEDIDOS NUEVOS (no enviados)
     public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad) {

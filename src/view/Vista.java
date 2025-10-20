@@ -1,9 +1,9 @@
 package view;
 
-
+import controller.Controlador;
 import model.Articulo;
-import NoobDevs.modelo.Cliente;
-import NoobDevs.modelo.Pedido;
+import model.Cliente;
+import model.Pedido;
 
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Clase destinada a ser el menú principal
  */
 public class Vista {
-    private NoobDevs.controlador.Controlador controlador;
+    private Controlador controlador;
     private Scanner teclado;
 
     public Vista(){
@@ -32,7 +32,7 @@ public class Vista {
             System.out.println("\n---- MENÚ DE OPCIONES: ----");
             System.out.println("1.  Gestionar clientes");  // añadir cliente, mostrar clientes, mostrar clientes estandar, mostrar clientes premium
             System.out.println("2.  Gestionar Artículos"); //añadir artículo, mostrar artículo
-            System.out.println("3.  Gestionar Pedido"); // añadir pedido, eliminar pedido, mostrar pedidos pendientes, mostrar pedidos enviados.
+            System.out.println("3.  Gestionar Pedidos"); // añadir pedido, eliminar pedido, mostrar pedidos pendientes, mostrar pedidos enviados.
             System.out.println("0.  Salir de la aplicación");
             opcion = askNumero(4);
 
@@ -275,7 +275,7 @@ public class Vista {
         }
     }
 
-    //Gestión Pedido
+    //Gestión Pedidos
 
     /**
      * mensaje de pedido añadido correctamente
@@ -325,6 +325,17 @@ public class Vista {
 
 
     //OTROS METODOS
+
+    /**
+     * muestra el mensaje de error genérico al usuario.
+     * El controller llamará a este método cuando ocurrar una excepción.
+     * @param message
+     */
+    public void mostrarError(String message){
+        System.out.println("\nERROR:");
+        System.out.println(message);
+    }
+
     /**
      * Pide el íncide a buscar, comprueba que este sea un número válido.
      * @param max tamaño máximo de la lista que se quiere recorrer.
