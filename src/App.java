@@ -1,14 +1,14 @@
-import model.Data;
+import model.TiendaOnline;
 import view.Vista;
 import controller.Controlador;
 
 /**
  * Clase principal dónde se une el modelo la vista y el controlador.
  */
-public class Main {
+public class App {
     public static void main(String[] args){
         //Se crea el modelo
-        Data modelo = new Data();
+        TiendaOnline modelo = new TiendaOnline();
 
         //Se crea la vista
         Vista vista = new Vista();
@@ -25,12 +25,3 @@ public class Main {
 
 }
 
-
-/**
- * CAMBIOS:
- * -> Clase ClienteStandar se ha eliminado el atributo descuento
- * -> Clase ClientePremium se han añadido las constantes CUOTA_ANUAL_PREMIUM y DESCUENTO_ENVIO_PREMIUM
- * -> Clase cliente, cliente premium y clientes estandar se añade el tostring
- * -> clase Data se ha modificado los métodos añadirCliente y añadirArticulo
- * -> Clase PedidoS se le quita la S
- */
