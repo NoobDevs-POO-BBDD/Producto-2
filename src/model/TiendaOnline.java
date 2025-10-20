@@ -1,98 +1,97 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TiendaOnline {
-    //  COLECCIONES MEJORADAS: HashMap para búsquedas eficientes
-    private Map<String, Articulo> articulosMap;
-    private Map<String, Cliente> clientesMap;
-    private Map<String, Pedidos> pedidosMap;
-    
-    //  GENERICS: Uso de tipos parametrizados en colecciones
-    private List<Pedidos> pedidosList; // Para mantener orden
+    private List<Articulo> articulos;
+    private List<Cliente> clientes;
+    private List<Pedidos> pedidos;
 
     public TiendaOnline() {
-        this.articulosMap = new HashMap<>();
-        this.clientesMap = new HashMap<>();
-        this.pedidosMap = new HashMap<>();
-        this.pedidosList = new ArrayList<>();
+        this.articulos = new ArrayList<>();
+        this.clientes = new ArrayList<>();
+        this.pedidos = new ArrayList<>();
     }
 
     // === GESTIÓN DE ARTÍCULOS ===
     
     public void añadirArticulo(Articulo articulo) {
-        //  EXCEPCIÓN PERSONALIZADA (debes crear esta clase)
-        if (articulosMap.containsKey(articulo.getCodigo())) {
-            throw new ArticuloExistenteException("Ya existe un artículo con el código: " + articulo.getCodigo());
+        // Verificar que no existe un artículo con el mismo código
+        if (buscarArticulo(articulo.getCodigo()) != null) {
+            throw new IllegalArgumentException("Ya existe un artículo con el código: " + articulo.getCodigo());
         }
-        articulosMap.put(articulo.getCodigo(), articulo);
+        articulos.add(articulo);
     }
 
     public List<Articulo> mostrarArticulos() {
-        //  COLECCIÓN INMUTABLE para evitar modificaciones externas
-        return List.copyOf(articulosMap.values());
+        return new ArrayList<>(articulos);
     }
 
-    public Optional<Articulo> buscarArticulo(String codigo) {
-        //  OPTIONAL: Mejora el manejo de valores nulos
-        return Optional.ofNullable(articulosMap.get(codigo));
+    public Articulo buscarArticulo(String codigo) {
+        return articulos.stream()
+                .filter(articulo -> articulo.getCodigo().equals(codigo))
+                .findFirst()
+                .orElse(null);
     }
 
     // === GESTIÓN DE CLIENTES ===
     
     public void añadirCliente(Cliente cliente) {
-        //  EXCEPCIÓN PERSONALIZADA
-        if (clientesMap.containsKey(cliente.getEmail())) {
-            throw new ClienteExistenteException("Ya existe un cliente con el email: " + cliente.getEmail());
+        // Verificar que no existe un cliente con el mismo email (identificador)
+        if (buscarClientePorEmail(cliente.getEmail()) != null) {
+            throw new IllegalArgumentException("Ya existe un cliente con el email: " + cliente.getEmail());
         }
-        clientesMap.put(cliente.getEmail(), cliente);
+        clientes.add(cliente);
     }
 
     public List<Cliente> mostrarClientes() {
-        return List.copyOf(clientesMap.values());
+        return new ArrayList<>(clientes);
     }
 
-    //  GENERICS: Uso de wildcards para flexibilidad
-    public List<? extends Cliente> mostrarClientesEstandar() {
-        return clientesMap.values().stream()
+    public List<Cliente> mostrarClientesEstandar() {
+        return clientes.stream()
                 .filter(cliente -> cliente instanceof ClienteStandar)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public List<? extends Cliente> mostrarClientesPremium() {
-        return clientesMap.values().stream()
+    public List<Cliente> mostrarClientesPremium() {
+        return clientes.stream()
                 .filter(cliente -> cliente instanceof ClientePremium)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public Optional<Cliente> buscarClientePorEmail(String email) {
-        return Optional.ofNullable(clientesMap.get(email));
+    public Cliente buscarClientePorEmail(String email) {
+        return clientes.stream()
+                .filter(cliente -> cliente.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 
-    public Optional<Cliente> buscarClientePorNIF(String nif) {
-        return clientesMap.values().stream()
+    public Cliente buscarClientePorNIF(String nif) {
+        return clientes.stream()
                 .filter(cliente -> cliente.getNIF().equals(nif))
-                .findFirst();
+                .findFirst()
+                .orElse(null);
     }
 
     // === GESTIÓN DE PEDIDOS ===
     
     public void añadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
-        //  EXCEPCIONES ESPECÍFICAS
-        if (pedidosMap.containsKey(numeroPedido)) {
-            throw new PedidoExistenteException("Ya existe un pedido con número: " + numeroPedido);
-        }
-
-        Articulo articulo = articulosMap.get(codigoArticulo);
+        // Verificar que el artículo existe
+        Articulo articulo = buscarArticulo(codigoArticulo);
         if (articulo == null) {
-            throw new ArticuloNoEncontradoException("No existe el artículo con código: " + codigoArticulo);
+            throw new IllegalArgumentException("No existe el artículo con código: " + codigoArticulo);
         }
 
-        Cliente cliente = clientesMap.get(emailCliente);
+        // Buscar cliente por email
+        Cliente cliente = buscarClientePorEmail(emailCliente);
+        
+        // Si el cliente no existe, lanzamos excepción (según requisitos, se deberían pedir los datos)
         if (cliente == null) {
-            throw new ClienteNoEncontradoException("No existe el cliente con email: " + emailCliente);
+            throw new IllegalArgumentException("No existe el cliente con email: " + emailCliente + 
+                                             ". Se deben pedir los datos del nuevo cliente primero.");
         }
 
         if (cantidad <= 0) {
@@ -105,52 +104,47 @@ public class TiendaOnline {
             articulo,
             cantidad,
             LocalDate.now(),
-            false
+            false // estado inicial: pendiente (no enviado)
         );
-        
-        pedidosMap.put(numeroPedido, pedido);
-        pedidosList.add(pedido);
+        pedidos.add(pedido);
     }
 
     public boolean eliminarPedido(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
-        if (pedido != null && !pedido.estado() && puedeSerCancelado(pedido)) {
-            pedidosMap.remove(numeroPedido);
-            pedidosList.remove(pedido);
-            return true;
+        Pedidos pedido = buscarPedido(numeroPedido);
+        if (pedido != null && !estaEnviado(pedido) && puedeSerCancelado(pedido)) {
+            return pedidos.remove(pedido);
         }
         return false;
     }
 
-    //  COLECCIONES: Streams inmutables para datos de solo lectura
     public List<Pedidos> mostrarPedidosPendientes() {
-        return pedidosList.stream()
-                .filter(pedido -> !pedido.estado())
-                .collect(Collectors.toUnmodifiableList());
+        return pedidos.stream()
+                .filter(pedido -> !pedido.estado()) // estado false = pendiente
+                .toList();
     }
 
     public List<Pedidos> mostrarPedidosPendientes(String emailCliente) {
-        return pedidosList.stream()
+        return pedidos.stream()
                 .filter(pedido -> !pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     public List<Pedidos> mostrarPedidosEnviados() {
-        return pedidosList.stream()
-                .filter(Pedidos::estado)
-                .collect(Collectors.toUnmodifiableList());
+        return pedidos.stream()
+                .filter(Pedidos::estado) // estado true = enviado
+                .toList();
     }
 
     public List<Pedidos> mostrarPedidosEnviados(String emailCliente) {
-        return pedidosList.stream()
+        return pedidos.stream()
                 .filter(pedido -> pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     public void marcarPedidoComoEnviado(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
+        Pedidos pedido = buscarPedido(numeroPedido);
         if (pedido != null) {
             pedido.setEstado(true);
         }
@@ -158,8 +152,11 @@ public class TiendaOnline {
 
     // === MÉTODOS AUXILIARES ===
     
-    public Optional<Pedidos> buscarPedido(String numeroPedido) {
-        return Optional.ofNullable(pedidosMap.get(numeroPedido));
+    public Pedidos buscarPedido(String numeroPedido) {
+        return pedidos.stream()
+                .filter(pedido -> pedido.numeroPedido().equals(numeroPedido))
+                .findFirst()
+                .orElse(null);
     }
 
     private boolean estaEnviado(Pedidos pedido) {
@@ -175,9 +172,9 @@ public class TiendaOnline {
     }
 
     public double calcularPrecioPedido(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
+        Pedidos pedido = buscarPedido(numeroPedido);
         if (pedido == null) {
-            throw new PedidoNoEncontradoException("No existe el pedido: " + numeroPedido);
+            return 0.0;
         }
 
         Articulo articulo = pedido.articulo();
@@ -187,6 +184,7 @@ public class TiendaOnline {
         double precioBase = articulo.getPrecioVenta() * cantidad;
         double gastosEnvio = articulo.getGastosEnvio();
 
+        // Aplicar descuento en envío para clientes premium
         if (cliente instanceof ClientePremium premium) {
             gastosEnvio *= (1 - premium.getDescuentoEnvio());
         }
@@ -197,38 +195,43 @@ public class TiendaOnline {
     // === ESTADÍSTICAS ===
     
     public int getTotalArticulos() {
-        return articulosMap.size();
+        return articulos.size();
     }
 
     public int getTotalClientes() {
-        return clientesMap.size();
+        return clientes.size();
     }
 
     public int getTotalClientesEstandar() {
-        return (int) clientesMap.values().stream()
-                .filter(cliente -> cliente instanceof ClienteStandar)
-                .count();
+        return mostrarClientesEstandar().size();
     }
 
     public int getTotalClientesPremium() {
-        return (int) clientesMap.values().stream()
-                .filter(cliente -> cliente instanceof ClientePremium)
-                .count();
+        return mostrarClientesPremium().size();
     }
 
     public int getTotalPedidos() {
-        return pedidosMap.size();
+        return pedidos.size();
     }
 
     public int getTotalPedidosPendientes() {
-        return (int) pedidosList.stream()
-                .filter(pedido -> !pedido.estado())
-                .count();
+        return mostrarPedidosPendientes().size();
     }
 
     public int getTotalPedidosEnviados() {
-        return (int) pedidosList.stream()
-                .filter(Pedidos::estado)
-                .count();
+        return mostrarPedidosEnviados().size();
+    }
+
+    @Override
+    public String toString() {
+        return "TiendaOnline{" +
+                "articulos=" + getTotalArticulos() +
+                ", clientes=" + getTotalClientes() +
+                " (Estandar: " + getTotalClientesEstandar() + 
+                ", Premium: " + getTotalClientesPremium() + ")" +
+                ", pedidos=" + getTotalPedidos() +
+                " (Pendientes: " + getTotalPedidosPendientes() + 
+                ", Enviados: " + getTotalPedidosEnviados() + ")" +
+                '}';
     }
 }
