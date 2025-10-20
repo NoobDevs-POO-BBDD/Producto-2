@@ -10,10 +10,10 @@ public class TiendaOnline {
     //  COLECCIONES MEJORADAS: HashMap para búsquedas eficientes
     private Map<String, Articulo> articulosMap;
     private Map<String, Cliente> clientesMap;
-    private Map<String, Pedidos> pedidosMap;
+    private Map<String, Pedido> pedidosMap;
     
     //  GENERICS: Uso de tipos parametrizados en colecciones
-    private List<Pedidos> pedidosList; // Para mantener orden
+    private List<Pedido> pedidosList; // Para mantener orden
 
     public TiendaOnline() {
         this.articulosMap = new HashMap<>();
@@ -101,7 +101,7 @@ public class TiendaOnline {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
         }
 
-        Pedidos pedido = new Pedidos(
+        Pedido pedido = new Pedido(
             numeroPedido,
             cliente,
             articulo,
@@ -115,7 +115,7 @@ public class TiendaOnline {
     }
 
     public boolean eliminarPedido(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
+        Pedido pedido = pedidosMap.get(numeroPedido);
         if (pedido != null && !pedido.estado() && puedeSerCancelado(pedido)) {
             pedidosMap.remove(numeroPedido);
             pedidosList.remove(pedido);
@@ -125,26 +125,26 @@ public class TiendaOnline {
     }
 
     //  COLECCIONES: Streams inmutables para datos de solo lectura
-    public List<Pedidos> mostrarPedidosPendientes() {
+    public List<Pedido> mostrarPedidosPendientes() {
         return pedidosList.stream()
                 .filter(pedido -> !pedido.estado())
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Pedidos> mostrarPedidosPendientes(String emailCliente) {
+    public List<Pedido> mostrarPedidosPendientes(String emailCliente) {
         return pedidosList.stream()
                 .filter(pedido -> !pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Pedidos> mostrarPedidosEnviados() {
+    public List<Pedido> mostrarPedidosEnviados() {
         return pedidosList.stream()
-                .filter(Pedidos::estado)
+                .filter(Pedido::estado)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Pedidos> mostrarPedidosEnviados(String emailCliente) {
+    public List<Pedido> mostrarPedidosEnviados(String emailCliente) {
         return pedidosList.stream()
                 .filter(pedido -> pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
@@ -152,7 +152,7 @@ public class TiendaOnline {
     }
 
     public void marcarPedidoComoEnviado(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
+        Pedido pedido = pedidosMap.get(numeroPedido);
         if (pedido != null) {
             pedido.setEstado(true);
         }
@@ -160,15 +160,15 @@ public class TiendaOnline {
 
     // === MÉTODOS AUXILIARES ===
     
-    public Optional<Pedidos> buscarPedido(String numeroPedido) {
+    public Optional<Pedido> buscarPedido(String numeroPedido) {
         return Optional.ofNullable(pedidosMap.get(numeroPedido));
     }
 
-    private boolean estaEnviado(Pedidos pedido) {
+    private boolean estaEnviado(Pedido pedido) {
         return pedido.estado();
     }
 
-    private boolean puedeSerCancelado(Pedidos pedido) {
+    private boolean puedeSerCancelado(Pedido pedido) {
         LocalDateTime fechaPedido = pedido.fechaHora().atStartOfDay();
         LocalDateTime ahora = LocalDateTime.now();
         long minutosTranscurridos = ChronoUnit.MINUTES.between(fechaPedido, ahora);
@@ -177,7 +177,7 @@ public class TiendaOnline {
     }
 
     public double calcularPrecioPedido(String numeroPedido) {
-        Pedidos pedido = pedidosMap.get(numeroPedido);
+        Pedido pedido = pedidosMap.get(numeroPedido);
         if (pedido == null) {
             throw new PedidoNoEncontradoException("No existe el pedido: " + numeroPedido);
         }
@@ -230,7 +230,7 @@ public class TiendaOnline {
 
     public int getTotalPedidosEnviados() {
         return (int) pedidosList.stream()
-                .filter(Pedidos::estado)
+                .filter(Pedido::estado)
                 .count();
     }
 }
