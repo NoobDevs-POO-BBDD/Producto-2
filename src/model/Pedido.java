@@ -4,35 +4,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Pedido {
-<<<<<<< HEAD:src/model/Pedido.java
     private String numeroPedido;
-=======
-    //  NOMBRES MEJORADOS
-    private final String numeroPedido;  // Inmutable - identificador único
->>>>>>> annahico:src/model/Pedidos.java
     private Cliente cliente;
     private Articulo articulo;
     private int cantidad;
     private LocalDate fechaPedido;
     private boolean enviado;           // Nombre más descriptivo
 
-<<<<<<< HEAD:src/model/Pedido.java
     //constructor
     public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDate fechaHora, boolean estado) {
         this.numeroPedido = numeroPedido;
-=======
-    // CONSTRUCTOR CON VALIDACIÓN
-    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, 
-                 int cantidad, LocalDate fechaPedido, boolean enviado) {
-        
-        validarNumeroPedido(numeroPedido);
-        validarCliente(cliente);
-        validarArticulo(articulo);
-        validarCantidad(cantidad);
-        validarFechaPedido(fechaPedido);
-        
-        this.numeroPedido = numeroPedido.trim();
->>>>>>> annahico:src/model/Pedidos.java
         this.cliente = cliente;
         this.articulo = articulo;
         this.cantidad = cantidad;
@@ -183,7 +164,6 @@ public class Pedido {
     }
 
     @Override
-<<<<<<< HEAD:src/model/Pedido.java
     public String toString() {
         return "Pedido{" +
                 "numeroPedido='" + numeroPedido + '\'' +
@@ -193,10 +173,6 @@ public class Pedido {
                 ", fechaHora=" + fechaHora +
                 ", estado=" + estado +
                 '}';
-=======
-    public int hashCode() {
-        return Objects.hash(numeroPedido);
->>>>>>> annahico:src/model/Pedidos.java
     }
 
     // TOSTRING MEJORADO
