@@ -7,7 +7,7 @@ import java.util.List;
 public class TiendaOnline {
     private List<Articulo> articulos;
     private List<Cliente> clientes;
-    private List<Pedidos> pedidos;
+    private List<Pedido> pedidos;
 
     public TiendaOnline() {
         this.articulos = new ArrayList<>();
@@ -98,7 +98,7 @@ public class TiendaOnline {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
         }
 
-        Pedidos pedido = new Pedidos(
+        Pedido pedido = new Pedido(
             numeroPedido,
             cliente,
             articulo,
@@ -106,45 +106,45 @@ public class TiendaOnline {
             LocalDate.now(),
             false // estado inicial: pendiente (no enviado)
         );
-        pedidos.add(pedido);
+        pedidos.add(pedido);  // CORREGIDO: pedidos.add() no pedido.add()
     }
 
     public boolean eliminarPedido(String numeroPedido) {
-        Pedidos pedido = buscarPedido(numeroPedido);
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido != null && !estaEnviado(pedido) && puedeSerCancelado(pedido)) {
-            return pedidos.remove(pedido);
+            return pedidos.remove(pedido);  // CORREGIDO: pedidos.remove() no pedido.remove()
         }
         return false;
     }
 
-    public List<Pedidos> mostrarPedidosPendientes() {
-        return pedidos.stream()
+    public List<Pedido> mostrarPedidosPendientes() {  // CORREGIDO: mostrarPedidosPendientes (plural)
+        return pedidos.stream()  // CORREGIDO: pedidos.stream() no pedido.stream()
                 .filter(pedido -> !pedido.estado()) // estado false = pendiente
                 .toList();
     }
 
-    public List<Pedidos> mostrarPedidosPendientes(String emailCliente) {
-        return pedidos.stream()
+    public List<Pedido> mostrarPedidosPendientes(String emailCliente) {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
                 .filter(pedido -> !pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
-    public List<Pedidos> mostrarPedidosEnviados() {
-        return pedidos.stream()
-                .filter(Pedidos::estado) // estado true = enviado
+    public List<Pedido> mostrarPedidosEnviados() {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
+                .filter(Pedido::estado) // estado true = enviado
                 .toList();
     }
 
-    public List<Pedidos> mostrarPedidosEnviados(String emailCliente) {
-        return pedidos.stream()
+    public List<Pedido> mostrarPedidosEnviados(String emailCliente) {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
                 .filter(pedido -> pedido.estado() && 
                          pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
     public void marcarPedidoComoEnviado(String numeroPedido) {
-        Pedidos pedido = buscarPedido(numeroPedido);
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido != null) {
             pedido.setEstado(true);
         }
@@ -152,18 +152,18 @@ public class TiendaOnline {
 
     // === MÉTODOS AUXILIARES ===
     
-    public Pedidos buscarPedido(String numeroPedido) {
-        return pedidos.stream()
+    public Pedido buscarPedido(String numeroPedido) {
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
                 .filter(pedido -> pedido.numeroPedido().equals(numeroPedido))
                 .findFirst()
                 .orElse(null);
     }
 
-    private boolean estaEnviado(Pedidos pedido) {
+    private boolean estaEnviado(Pedido pedido) {
         return pedido.estado();
     }
 
-    private boolean puedeSerCancelado(Pedidos pedido) {
+    private boolean puedeSerCancelado(Pedido pedido) {
         LocalDateTime fechaPedido = pedido.fechaHora().atStartOfDay();
         LocalDateTime ahora = LocalDateTime.now();
         long minutosTranscurridos = ChronoUnit.MINUTES.between(fechaPedido, ahora);
@@ -172,7 +172,7 @@ public class TiendaOnline {
     }
 
     public double calcularPrecioPedido(String numeroPedido) {
-        Pedidos pedido = buscarPedido(numeroPedido);
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido == null) {
             return 0.0;
         }
@@ -210,15 +210,15 @@ public class TiendaOnline {
         return mostrarClientesPremium().size();
     }
 
-    public int getTotalPedidos() {
-        return pedidos.size();
+    public int getTotalPedidos() {  // CORREGIDO: getTotalPedidos (plural)
+        return pedidos.size();  // CORREGIDO: pedidos.size()
     }
 
-    public int getTotalPedidosPendientes() {
+    public int getTotalPedidosPendientes() {  // CORREGIDO: plural
         return mostrarPedidosPendientes().size();
     }
 
-    public int getTotalPedidosEnviados() {
+    public int getTotalPedidosEnviados() {  // CORREGIDO: plural
         return mostrarPedidosEnviados().size();
     }
 
