@@ -1,14 +1,14 @@
-package NoobDevs.controlador;
+package controller;
 
-import NoobDevs.vista.Vista;
-import NoobDevs.modelo.Data;
+import view.Vista;
+import model.TiendaOnline;
 
 public class Controlador {
     private Vista vista;
-    private Data modelo;
+    private TiendaOnline modelo;
 
     //Constructor
-    public Controlador(Vista vista, Data modelo){
+    public Controlador(Vista vista, TiendaOnline modelo){
         this.vista = vista;
         this.modelo = modelo;
     }

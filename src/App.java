@@ -1,16 +1,14 @@
-package NoobDevs;
-
-import NoobDevs.modelo.Data;
-import NoobDevs.vista.Vista;
-import NoobDevs.controlador.Controlador;
+import model.TiendaOnline;
+import view.Vista;
+import controller.Controlador;
 
 /**
  * Clase principal dónde se une el modelo la vista y el controlador.
  */
-public class Main {
+public class App {
     public static void main(String[] args){
         //Se crea el modelo
-        Data modelo = new Data();
+        TiendaOnline modelo = new TiendaOnline();
 
         //Se crea la vista
         Vista vista = new Vista();
@@ -27,13 +25,3 @@ public class Main {
 
 }
 
-//según he visto en tutoriales, el main debería quedar así porque tiene que pilla rel codigo de view, pero tampoco estoy segura -annahico
-  
-import view.TiendaView;
-
-public class Main {
-    public static void main(String[] args) {
-        TiendaView vista = new TiendaView();
-        vista.mostrarMenuPrincipal();
-    }
-}
