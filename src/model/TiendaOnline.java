@@ -1,3 +1,5 @@
+package model;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,12 +19,14 @@ public class TiendaOnline {
 
     // === GESTIÓN DE ARTÍCULOS ===
 
-    public void añadirArticulo(Articulo articulo) {
+    public void añadirArticulo(String codigo, String descripcion, Double precioVenta, Double gastosEnvio, int tiempoPreparacion) {
         // Verificar que no existe un artículo con el mismo código
-        if (buscarArticulo(articulo.getCodigo()) != null) {
-            throw new IllegalArgumentException("Ya existe un artículo con el código: " + articulo.getCodigo());
+        if (buscarArticulo(codigo) != null) {
+            throw new IllegalArgumentException("Ya existe un artículo con el código: " + codigo);
+        }else{
+            Articulo articulo = new Articulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
+            articulos.add(articulo);
         }
-        articulos.add(articulo);
     }
 
     public List<Articulo> mostrarArticulos() {
@@ -38,12 +42,19 @@ public class TiendaOnline {
 
     // === GESTIÓN DE CLIENTES ===
 
-    public void añadirCliente(Cliente cliente) {
+    public void añadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium) {
         // Verificar que no existe un cliente con el mismo email (identificador)
-        if (buscarClientePorEmail(cliente.getEmail()) != null) {
-            throw new IllegalArgumentException("Ya existe un cliente con el email: " + cliente.getEmail());
+        if (buscarClientePorEmail(email) != null) {
+            throw new IllegalArgumentException("Ya existe un cliente con el email: " + email);
+        }else{
+            if (!premium){
+                ClienteStandar clienteStandar = new ClienteStandar(email, nombre, domicilio, nif, ClienteStandar.DESCUENTO_ENVIO_STANDAR);
+                clientes.add(clienteStandar);
+            }else{
+                ClientePremium clientePremium = new ClientePremium(email, nombre, domicilio, nif, ClientePremium.DESCUENTO_ENVIO_PREMIUM,ClientePremium.CUOTA_ANUAL_PREMIUM);
+                clientes.add(clientePremium);
+            }
         }
-        clientes.add(cliente);
     }
 
     public List<Cliente> mostrarClientes() {
