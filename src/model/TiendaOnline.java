@@ -16,7 +16,7 @@ public class TiendaOnline {
     }
 
     // === GESTIÓN DE ARTÍCULOS ===
-    
+
     public void añadirArticulo(Articulo articulo) {
         // Verificar que no existe un artículo con el mismo código
         if (buscarArticulo(articulo.getCodigo()) != null) {
@@ -37,7 +37,7 @@ public class TiendaOnline {
     }
 
     // === GESTIÓN DE CLIENTES ===
-    
+
     public void añadirCliente(Cliente cliente) {
         // Verificar que no existe un cliente con el mismo email (identificador)
         if (buscarClientePorEmail(cliente.getEmail()) != null) {
@@ -77,7 +77,7 @@ public class TiendaOnline {
     }
 
     // === GESTIÓN DE PEDIDOS ===
-    
+
     public void añadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
         // Verificar que el artículo existe
         Articulo articulo = buscarArticulo(codigoArticulo);
@@ -87,11 +87,11 @@ public class TiendaOnline {
 
         // Buscar cliente por email
         Cliente cliente = buscarClientePorEmail(emailCliente);
-        
+
         // Si el cliente no existe, lanzamos excepción (según requisitos, se deberían pedir los datos)
         if (cliente == null) {
-            throw new IllegalArgumentException("No existe el cliente con email: " + emailCliente + 
-                                             ". Se deben pedir los datos del nuevo cliente primero.");
+            throw new IllegalArgumentException("No existe el cliente con email: " + emailCliente +
+                    ". Se deben pedir los datos del nuevo cliente primero.");
         }
 
         if (cantidad <= 0) {
@@ -99,12 +99,12 @@ public class TiendaOnline {
         }
 
         Pedido pedido = new Pedido(
-            numeroPedido,
-            cliente,
-            articulo,
-            cantidad,
-            LocalDate.now(),
-            false // estado inicial: pendiente (no enviado)
+                numeroPedido,
+                cliente,
+                articulo,
+                cantidad,
+                LocalDate.now(),
+                false // estado inicial: pendiente (no enviado)
         );
         pedidos.add(pedido);  // CORREGIDO: pedidos.add() no pedido.add()
     }
@@ -125,8 +125,8 @@ public class TiendaOnline {
 
     public List<Pedido> mostrarPedidosPendientes(String emailCliente) {  // CORREGIDO: plural
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(pedido -> !pedido.estado() && 
-                         pedido.cliente().getEmail().equals(emailCliente))
+                .filter(pedido -> !pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
@@ -138,8 +138,8 @@ public class TiendaOnline {
 
     public List<Pedido> mostrarPedidosEnviados(String emailCliente) {  // CORREGIDO: plural
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(pedido -> pedido.estado() && 
-                         pedido.cliente().getEmail().equals(emailCliente))
+                .filter(pedido -> pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
@@ -151,7 +151,7 @@ public class TiendaOnline {
     }
 
     // === MÉTODOS AUXILIARES ===
-    
+
     public Pedido buscarPedido(String numeroPedido) {
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
                 .filter(pedido -> pedido.numeroPedido().equals(numeroPedido))
@@ -167,7 +167,7 @@ public class TiendaOnline {
         LocalDateTime fechaPedido = pedido.fechaHora().atStartOfDay();
         LocalDateTime ahora = LocalDateTime.now();
         long minutosTranscurridos = ChronoUnit.MINUTES.between(fechaPedido, ahora);
-        
+
         return minutosTranscurridos <= pedido.articulo().getTiempoPreparacion();
     }
 
@@ -193,7 +193,7 @@ public class TiendaOnline {
     }
 
     // === ESTADÍSTICAS ===
-    
+
     public int getTotalArticulos() {
         return articulos.size();
     }
@@ -227,10 +227,10 @@ public class TiendaOnline {
         return "TiendaOnline{" +
                 "articulos=" + getTotalArticulos() +
                 ", clientes=" + getTotalClientes() +
-                " (Estandar: " + getTotalClientesEstandar() + 
+                " (Estandar: " + getTotalClientesEstandar() +
                 ", Premium: " + getTotalClientesPremium() + ")" +
                 ", pedidos=" + getTotalPedidos() +
-                " (Pendientes: " + getTotalPedidosPendientes() + 
+                " (Pendientes: " + getTotalPedidosPendientes() +
                 ", Enviados: " + getTotalPedidosEnviados() + ")" +
                 '}';
     }
