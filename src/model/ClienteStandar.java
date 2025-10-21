@@ -1,5 +1,5 @@
 public class ClienteStandar extends Cliente {
-     private double descuentoEnvio = 0.0;
+    private double descuentoEnvio = 0.0;
 
 
     public ClienteStandar(String email, String nombre, String domicilio, String NIF, double descuentoEnvio) {
@@ -7,12 +7,12 @@ public class ClienteStandar extends Cliente {
         this.descuentoEnvio = descuentoEnvio;
     }
 
-     public double getDescuentoEnvio() {
-            return descuentoEnvio;
-        }
+    public double getDescuentoEnvio() {
+        return descuentoEnvio;
+    }
 
-     public void setDescuentoEnvio(double descuentoEnvio) {
-            this.descuentoEnvio = descuentoEnvio;
-        }
-    
+    public void setDescuentoEnvio(double descuentoEnvio) {
+        this.descuentoEnvio = descuentoEnvio;
+    }
+
 }

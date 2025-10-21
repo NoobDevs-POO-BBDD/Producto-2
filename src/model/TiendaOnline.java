@@ -7,17 +7,18 @@ import java.util.List;
 public class TiendaOnline {
     private List<Articulo> articulos;
     private List<Cliente> clientes;
-    private List<Pedido> pedidos;  // CORREGIDO: Pedidos a Pedido
+    private List<Pedido> pedidos;
 
     public TiendaOnline() {
         this.articulos = new ArrayList<>();
         this.clientes = new ArrayList<>();
-        this.pedidos = new ArrayList<>();  // CORREGIDO: Pedidos a Pedido
+        this.pedidos = new ArrayList<>();
     }
 
     // === GESTIÓN DE ARTÍCULOS ===
-    
+
     public void añadirArticulo(Articulo articulo) {
+        // Verificar que no existe un artículo con el mismo código
         if (buscarArticulo(articulo.getCodigo()) != null) {
             throw new IllegalArgumentException("Ya existe un artículo con el código: " + articulo.getCodigo());
         }
@@ -36,8 +37,9 @@ public class TiendaOnline {
     }
 
     // === GESTIÓN DE CLIENTES ===
-    
+
     public void añadirCliente(Cliente cliente) {
+        // Verificar que no existe un cliente con el mismo email (identificador)
         if (buscarClientePorEmail(cliente.getEmail()) != null) {
             throw new IllegalArgumentException("Ya existe un cliente con el email: " + cliente.getEmail());
         }
@@ -75,99 +77,102 @@ public class TiendaOnline {
     }
 
     // === GESTIÓN DE PEDIDOS ===
-    
+
     public void añadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
+        // Verificar que el artículo existe
         Articulo articulo = buscarArticulo(codigoArticulo);
         if (articulo == null) {
             throw new IllegalArgumentException("No existe el artículo con código: " + codigoArticulo);
         }
 
+        // Buscar cliente por email
         Cliente cliente = buscarClientePorEmail(emailCliente);
-        
+
+        // Si el cliente no existe, lanzamos excepción (según requisitos, se deberían pedir los datos)
         if (cliente == null) {
-            throw new IllegalArgumentException("No existe el cliente con email: " + emailCliente + 
-                                             ". Se deben pedir los datos del nuevo cliente primero.");
+            throw new IllegalArgumentException("No existe el cliente con email: " + emailCliente +
+                    ". Se deben pedir los datos del nuevo cliente primero.");
         }
 
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser mayor a 0");
         }
 
-        Pedido pedido = new Pedido(  // CORREGIDO: Pedidos a Pedido
-            numeroPedido,
-            cliente,
-            articulo,
-            cantidad,
-            LocalDate.now(),
-            false
+        Pedido pedido = new Pedido(
+                numeroPedido,
+                cliente,
+                articulo,
+                cantidad,
+                LocalDate.now(),
+                false // estado inicial: pendiente (no enviado)
         );
-        pedidos.add(pedido);
+        pedidos.add(pedido);  // CORREGIDO: pedidos.add() no pedido.add()
     }
 
     public boolean eliminarPedido(String numeroPedido) {
-        Pedido pedido = buscarPedido(numeroPedido);  // CORREGIDO: Pedidos a Pedido
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido != null && !estaEnviado(pedido) && puedeSerCancelado(pedido)) {
-            return pedidos.remove(pedido);
+            return pedidos.remove(pedido);  // CORREGIDO: pedidos.remove() no pedido.remove()
         }
         return false;
     }
 
-    public List<Pedido> mostrarPedidosPendientes() {  // CORREGIDO: Pedidos a Pedido
-        return pedidos.stream()
-                .filter(pedido -> !pedido.estado())
+    public List<Pedido> mostrarPedidosPendientes() {  // CORREGIDO: mostrarPedidosPendientes (plural)
+        return pedidos.stream()  // CORREGIDO: pedidos.stream() no pedido.stream()
+                .filter(pedido -> !pedido.estado()) // estado false = pendiente
                 .toList();
     }
 
-    public List<Pedido> mostrarPedidosPendientes(String emailCliente) {  // CORREGIDO: Pedidos a Pedido
-        return pedidos.stream()
-                .filter(pedido -> !pedido.estado() && 
-                         pedido.cliente().getEmail().equals(emailCliente))
+    public List<Pedido> mostrarPedidosPendientes(String emailCliente) {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
+                .filter(pedido -> !pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
-    public List<Pedido> mostrarPedidosEnviados() {  // CORREGIDO: Pedidos a Pedido
-        return pedidos.stream()
-                .filter(Pedido::estado)  // CORREGIDO: Pedidos a Pedido
+    public List<Pedido> mostrarPedidosEnviados() {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
+                .filter(Pedido::estado) // estado true = enviado
                 .toList();
     }
 
-    public List<Pedido> mostrarPedidosEnviados(String emailCliente) {  // CORREGIDO: Pedidos a Pedido
-        return pedidos.stream()
-                .filter(pedido -> pedido.estado() && 
-                         pedido.cliente().getEmail().equals(emailCliente))
+    public List<Pedido> mostrarPedidosEnviados(String emailCliente) {  // CORREGIDO: plural
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
+                .filter(pedido -> pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
     public void marcarPedidoComoEnviado(String numeroPedido) {
-        Pedido pedido = buscarPedido(numeroPedido);  // CORREGIDO: Pedidos a Pedido
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido != null) {
             pedido.setEstado(true);
         }
     }
 
     // === MÉTODOS AUXILIARES ===
-    
-    public Pedido buscarPedido(String numeroPedido) {  // CORREGIDO: Pedidos a Pedido
-        return pedidos.stream()
+
+    public Pedido buscarPedido(String numeroPedido) {
+        return pedidos.stream()  // CORREGIDO: pedidos.stream()
                 .filter(pedido -> pedido.numeroPedido().equals(numeroPedido))
                 .findFirst()
                 .orElse(null);
     }
 
-    private boolean estaEnviado(Pedido pedido) {  // CORREGIDO: Pedidos a Pedido
+    private boolean estaEnviado(Pedido pedido) {
         return pedido.estado();
     }
 
-    private boolean puedeSerCancelado(Pedido pedido) {  // CORREGIDO: Pedidos a Pedido
+    private boolean puedeSerCancelado(Pedido pedido) {
         LocalDateTime fechaPedido = pedido.fechaHora().atStartOfDay();
         LocalDateTime ahora = LocalDateTime.now();
         long minutosTranscurridos = ChronoUnit.MINUTES.between(fechaPedido, ahora);
-        
+
         return minutosTranscurridos <= pedido.articulo().getTiempoPreparacion();
     }
 
     public double calcularPrecioPedido(String numeroPedido) {
-        Pedido pedido = buscarPedido(numeroPedido);  // CORREGIDO: Pedidos a Pedido
+        Pedido pedido = buscarPedido(numeroPedido);
         if (pedido == null) {
             return 0.0;
         }
@@ -179,6 +184,7 @@ public class TiendaOnline {
         double precioBase = articulo.getPrecioVenta() * cantidad;
         double gastosEnvio = articulo.getGastosEnvio();
 
+        // Aplicar descuento en envío para clientes premium
         if (cliente instanceof ClientePremium premium) {
             gastosEnvio *= (1 - premium.getDescuentoEnvio());
         }
@@ -187,7 +193,7 @@ public class TiendaOnline {
     }
 
     // === ESTADÍSTICAS ===
-    
+
     public int getTotalArticulos() {
         return articulos.size();
     }
@@ -204,15 +210,15 @@ public class TiendaOnline {
         return mostrarClientesPremium().size();
     }
 
-    public int getTotalPedidos() {
-        return pedidos.size();
+    public int getTotalPedidos() {  // CORREGIDO: getTotalPedidos (plural)
+        return pedidos.size();  // CORREGIDO: pedidos.size()
     }
 
-    public int getTotalPedidosPendientes() {
+    public int getTotalPedidosPendientes() {  // CORREGIDO: plural
         return mostrarPedidosPendientes().size();
     }
 
-    public int getTotalPedidosEnviados() {
+    public int getTotalPedidosEnviados() {  // CORREGIDO: plural
         return mostrarPedidosEnviados().size();
     }
 
@@ -221,10 +227,10 @@ public class TiendaOnline {
         return "TiendaOnline{" +
                 "articulos=" + getTotalArticulos() +
                 ", clientes=" + getTotalClientes() +
-                " (Estandar: " + getTotalClientesEstandar() + 
+                " (Estandar: " + getTotalClientesEstandar() +
                 ", Premium: " + getTotalClientesPremium() + ")" +
                 ", pedidos=" + getTotalPedidos() +
-                " (Pendientes: " + getTotalPedidosPendientes() + 
+                " (Pendientes: " + getTotalPedidosPendientes() +
                 ", Enviados: " + getTotalPedidosEnviados() + ")" +
                 '}';
     }
