@@ -1,3 +1,5 @@
+package model;
+
 public abstract class Cliente {
     private String email;
     private String nombre;
@@ -41,5 +43,15 @@ public abstract class Cliente {
 
     public void setNIF(String NIF) {
         this.NIF = NIF;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "email='" + email + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", domicilio='" + domicilio + '\'' +
+                ", NIF='" + NIF + '\'' +
+                '}';
     }
 }
