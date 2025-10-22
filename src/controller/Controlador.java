@@ -21,7 +21,7 @@ public class Controlador {
     public void solicitaAnadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium){
         try {
             modelo.anadirCliente(email, nombre, domicilio, nif,premium);
-            System.out.println("Cliente añadido correctamente.");
+            vista.clienteAnadido();
         } catch (IllegalArgumentException e) {
             vista.mostrarError(e.getMessage());
         }
@@ -47,7 +47,7 @@ public class Controlador {
     public void solicitarAnadirArticulo(String codigo, String descripcion, double precioVenta, double gastosEnvio, int tiempoPreparacion){
         try {
             modelo.anadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
-            System.out.println("Articulo añadido correctamente.");
+            vista.articuloAnadido();
         } catch (IllegalArgumentException e) {
             vista.mostrarError(e.getMessage());
         }
@@ -68,7 +68,7 @@ public class Controlador {
     public void solicitarAnadirPedido(String numeroPedido,String cliente,String articulo,int cantidad){
         try {
             modelo.anadirPedido(numeroPedido,cliente,articulo,cantidad);
-            System.out.println("Pedido añadido correctamente.");
+            vista.pedidoAnadido();
         } catch (IllegalArgumentException e) {
             vista.mostrarError(e.getMessage());
         }
@@ -79,7 +79,7 @@ public class Controlador {
         if(verdadero){
             List<Pedido> listaActualizada = modelo.mostrarPedidosPendientes();
             vista.mostrarListaPedidosPendientes(listaActualizada);
-            System.out.println("Pedido eliminado correctamente.");
+            vista.pedidoEliminado();
         } else {
             String message = "No se pudo eliminar el pedido " + numeroPedidoBorrar + ". Es posible que ya esté enviado o no se pueda cancelar.";
             vista.mostrarError(message);
