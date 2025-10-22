@@ -109,7 +109,6 @@ public class Controlador {
         vista.mostrarListaPedidosPendientes(pendientesEmail);
     }
 
-
     public void solicitarMostrarPedidosEnviados() {
         List<Pedido> enviados = modelo.mostrarPedidosEnviados();
         vista.mostrarListaPedidosEnviados(enviados);
