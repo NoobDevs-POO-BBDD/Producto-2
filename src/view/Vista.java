@@ -83,16 +83,16 @@ public class Vista {
                 String entrada = teclado.nextLine();
                 boolean premium = entrada.equals("1");
 
-                controlador.añadirCliente(email, nombre, domicilio, nif,premium);
+                controlador.solicitaAnadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
-                controlador.mostrarClientes();
+                controlador.solicitarMostrarClientes();
                 break;
             case 3:
-                controlador.mostrarClientesEstandar();
+                controlador.solicitarMostrarClientesEstandar();
                 break;
             case 4:
-                controlador.mostrarClientesPremium();
+                controlador.solicitarMostrarClientesPremium();
                 break;
         }
     }
@@ -122,18 +122,18 @@ public class Vista {
                 System.out.print("Introduce el tiempo de preparación >> ");
                 int tiempoPreparacion = Integer.parseInt(teclado.nextLine());
 
-                controlador.añadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
+                controlador.solicitarAnadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
                 break;
 
             case 2:
-                controlador.mostrarArticulos();
+                controlador.solicitarMostrarArticulos();
                 break;
 
             case 3:
                 System.out.print("Introduce el código del artículo a buscar >> ");
                 String codigoBuscar = teclado.nextLine();
 
-                controlador.buscarArticulo(codigoBuscar);
+                controlador.solicitarBuscarArticulo(codigoBuscar);
                 break;
         }
     }
@@ -162,19 +162,19 @@ public class Vista {
                 System.out.print("Introduce la cantidad >> ");
                 int cantidad = Integer.parseInt(teclado.nextLine());
 
-                controlador.añadirPedido(numeroPedido,cliente,articulo,cantidad);
+                controlador.solicitarAnadirPedido(numeroPedido,cliente,articulo,cantidad);
                 break;
             case 2:
                 System.out.print("Introduce el número de pedido >> ");
                 String numeroPedidoBorrar = teclado.nextLine();
 
-                controlador.eliminarPedido(numeroPedidoBorrar);
+                controlador.solicitarEliminarPedido(numeroPedidoBorrar);
                 break;
             case 3:
-                controlador.mostarPedidosPendientes();
+                controlador.solicitarMostarPedidosPendientes();
                 break;
             case 4:
-                controlador.mostrarPedidosEnviados();
+                controlador.solicitarMostrarPedidosEnviados();
                 break;
 
         }
@@ -188,7 +188,7 @@ public class Vista {
     /**
      * muestra mensaje cliente añadido correctamente
      */
-    public void clienteAñadido(){
+    public void clienteAnadido(){
         System.out.println("Cliente añadido correctamente");
     }
 
@@ -280,7 +280,7 @@ public class Vista {
     /**
      * mensaje de pedido añadido correctamente
      */
-    public void pedidoAñadido(){
+    public void pedidoAnadido(){
         System.out.println("Pedido añadido correctamente.");
     }
 

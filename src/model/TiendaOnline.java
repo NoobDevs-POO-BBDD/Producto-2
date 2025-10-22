@@ -19,7 +19,7 @@ public class TiendaOnline {
 
     // === GESTIÓN DE ARTÍCULOS ===
 
-    public void añadirArticulo(String codigo, String descripcion, Double precioVenta, Double gastosEnvio, int tiempoPreparacion) {
+    public void anadirArticulo(String codigo, String descripcion, Double precioVenta, Double gastosEnvio, int tiempoPreparacion) {
         // Verificar que no existe un artículo con el mismo código
         if (buscarArticulo(codigo) != null) {
             throw new IllegalArgumentException("Ya existe un artículo con el código: " + codigo);
@@ -42,7 +42,7 @@ public class TiendaOnline {
 
     // === GESTIÓN DE CLIENTES ===
 
-    public void añadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium) {
+    public void anadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium) {
         // Verificar que no existe un cliente con el mismo email (identificador)
         if (buscarClientePorEmail(email) != null) {
             throw new IllegalArgumentException("Ya existe un cliente con el email: " + email);
@@ -89,7 +89,7 @@ public class TiendaOnline {
 
     // === GESTIÓN DE PEDIDOS ===
 
-    public void añadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
+    public void anadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
         // Verificar que el artículo existe
         Articulo articulo = buscarArticulo(codigoArticulo);
         if (articulo == null) {
