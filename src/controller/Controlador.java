@@ -70,7 +70,20 @@ public class Controlador {
             modelo.anadirPedido(numeroPedido,cliente,articulo,cantidad);
             vista.pedidoAnadido();
         } catch (IllegalArgumentException e) {
-            vista.mostrarError(e.getMessage());
+            String error = e.getMessage();
+            if (error != null && error.startsWith("No existe el cliente con email")){
+                vista.mostrarError(error);
+                vista.solicitarDatosNuevoCliente(cliente);
+                Cliente c = modelo.buscarClientePorEmail(cliente);
+
+                if (c !=null ){
+                    solicitarAnadirPedido(numeroPedido, cliente, articulo, cantidad);
+                }else {
+                    vista.mostrarError("No se pudo registrar el cliente. Pedido cancelado.");
+                }
+            }else{
+                vista.mostrarError(e.getMessage());
+            }
         }
     }
 
@@ -81,7 +94,7 @@ public class Controlador {
             vista.mostrarListaPedidosPendientes(listaActualizada);
             vista.pedidoEliminado();
         } else {
-            String message = "No se pudo eliminar el pedido " + numeroPedidoBorrar + ". Es posible que ya esté enviado o no se pueda cancelar.";
+            String message = "No se pudo eliminar el pedido " + numeroPedidoBorrar + ". Es posible que ya esté enviado o se ha eliminado con anterioridad.";
             vista.mostrarError(message);
         }
     }

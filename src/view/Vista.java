@@ -155,7 +155,7 @@ public class Vista {
                 System.out.print("Introduce el código del artículo >> ");
                 String articulo = teclado.nextLine();
                 int cantidad = askInt("Introduce la cantidad >> ");
-
+                //Aquí
                 controlador.solicitarAnadirPedido(numeroPedido,cliente,articulo,cantidad);
                 break;
             case 2:
@@ -169,7 +169,6 @@ public class Vista {
                     System.out.println("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
                     controlador.solicitarMostrarPedidosPendientesEmail(emailCliente);
-
                 }else{
                     controlador.solicitarMostrarPedidosPendientes();
                 }
@@ -333,6 +332,25 @@ public class Vista {
     //OTROS METODOS
 
     /**
+     * Si durante la creación de un pedido el email del cliente no está registrado se pide que registre el usuario
+     * @param email
+     */
+    public void solicitarDatosNuevoCliente(String email){
+        System.out.println("\n NUEVO CLIENTE DETECTADO \n");
+        System.out.println("Introduce los datos para el cliente con email: "+ email);
+        System.out.print("Introduce el nombre >> ");
+        String nombre = teclado.nextLine();
+        System.out.print("Introduce el domicilio >> ");
+        String domicilio = teclado.nextLine();
+        System.out.print("Introduce el NIF >> ");
+        String nif = teclado.nextLine();
+
+        boolean premium = askConfirmacion("¿El cliente es premium?");
+
+        controlador.solicitarAnadirCliente(email,nombre,domicilio,nif,premium);
+    }
+
+    /**
      * muestra el mensaje de error genérico al usuario.
      * El controller llamará a este método cuando ocurrar una excepción.
      * @param message
@@ -375,7 +393,7 @@ public class Vista {
      * @return
      */
     private boolean askConfirmacion(String pregunta){
-        System.out.println("\n" + pregunta + "(S/N) >> ");
+        System.out.print( pregunta + "(S/N) >> ");
         String respuesta = teclado.nextLine();
         return respuesta.equalsIgnoreCase("S");
     }
@@ -387,7 +405,7 @@ public class Vista {
      */
     private int askInt(String prompt){
         while(true){
-            System.out.println(prompt);
+            System.out.print(prompt);
             try{
                 int valor = Integer.parseInt(teclado.nextLine());
                 return valor;
@@ -404,7 +422,7 @@ public class Vista {
      */
     private double askDouble(String prompt){
         while (true){
-            System.out.println(prompt);
+            System.out.print(prompt);
             try{
                 double valor = Double.parseDouble(teclado.nextLine());
                 return valor;
