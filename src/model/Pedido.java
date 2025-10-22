@@ -1,17 +1,17 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Pedido {
     private String numeroPedido;
     private Cliente cliente;
     private Articulo articulo;
     private int cantidad;
-    private LocalDate fechaHora;
+    private LocalDateTime fechaHora;
     private boolean estado;
 
     //constructor
-    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDate fechaHora, boolean estado) {
+    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDateTime fechaHora, boolean estado) {
         this.numeroPedido = numeroPedido;
         this.cliente = cliente;
         this.articulo = articulo;
@@ -53,11 +53,11 @@ public class Pedido {
         this.articulo = articulo;
     }
 
-    public LocalDate fechaHora() {
+    public LocalDateTime fechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDate fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 

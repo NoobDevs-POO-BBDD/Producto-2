@@ -79,20 +79,18 @@ public class Vista {
                 String domicilio = teclado.nextLine();
                 System.out.print("Introduce el NIF >> ");
                 String nif = teclado.nextLine();
-                System.out.print("Si es cliente prémium pulsa 1 >> ");  //Se pasa un booleano con true si es premium, así se puede añadir la cuota y el descuento
-                String entrada = teclado.nextLine();
-                boolean premium = entrada.equals("1");
+                boolean premium = askConfirmacion("¿El cliente es premium?");
 
-                controlador.añadirCliente(email, nombre, domicilio, nif,premium);
+                controlador.solicitaAnadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
-                controlador.mostrarClientes();
+                controlador.solicitarMostrarClientes();
                 break;
             case 3:
-                controlador.mostrarClientesEstandar();
+                controlador.solicitarMostrarClientesEstandar();
                 break;
             case 4:
-                controlador.mostrarClientesPremium();
+                controlador.solicitarMostrarClientesPremium();
                 break;
         }
     }
@@ -115,25 +113,22 @@ public class Vista {
                 String codigo = teclado.nextLine();
                 System.out.print("Introduce la descripción >> ");
                 String descripcion = teclado.nextLine();
-                System.out.print("Introduce el precio de venta >> ");
-                double precioVenta = Double.parseDouble(teclado.nextLine());
-                System.out.print("Introduce el precio de envío >> ");
-                double gastosEnvio = Double.parseDouble(teclado.nextLine());
-                System.out.print("Introduce el tiempo de preparación >> ");
-                int tiempoPreparacion = Integer.parseInt(teclado.nextLine());
+                double precioVenta = askDouble("Introduce el precio de venta >> ");
+                double gastosEnvio = askDouble("Introduce el precio de envío >> ");
+                int tiempoPreparacion = askInt("Introduce el tiempo de preparación >> ");
 
-                controlador.añadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
+                controlador.solicitarAnadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
                 break;
 
             case 2:
-                controlador.mostrarArticulos();
+                controlador.solicitarMostrarArticulos();
                 break;
 
             case 3:
                 System.out.print("Introduce el código del artículo a buscar >> ");
                 String codigoBuscar = teclado.nextLine();
 
-                controlador.buscarArticulo(codigoBuscar);
+                controlador.solicitarBuscarArticulo(codigoBuscar);
                 break;
         }
     }
@@ -159,22 +154,33 @@ public class Vista {
                 String cliente = teclado.nextLine();
                 System.out.print("Introduce el código del artículo >> ");
                 String articulo = teclado.nextLine();
-                System.out.print("Introduce la cantidad >> ");
-                int cantidad = Integer.parseInt(teclado.nextLine());
-
-                controlador.añadirPedido(numeroPedido,cliente,articulo,cantidad);
+                int cantidad = askInt("Introduce la cantidad >> ");
+                //Aquí
+                controlador.solicitarAnadirPedido(numeroPedido,cliente,articulo,cantidad);
                 break;
             case 2:
                 System.out.print("Introduce el número de pedido >> ");
                 String numeroPedidoBorrar = teclado.nextLine();
 
-                controlador.eliminarPedido(numeroPedidoBorrar);
+                controlador.solicitarEliminarPedido(numeroPedidoBorrar);
                 break;
             case 3:
-                controlador.mostarPedidosPendientes();
+                if (askConfirmacion("¿Desea filtrar por cliente?")){
+                    System.out.println("Introduce el email del cliente >> ");
+                    String emailCliente = teclado.nextLine();
+                   // controlador.solicitarMostarPedidosPendientes(emailCliente);  //ESTE ES EL MÉTODO MODIFICADO
+
+                }else{
+                    controlador.solicitarMostarPedidosPendientes();
+                }
                 break;
             case 4:
-                controlador.mostrarPedidosEnviados();
+                if(askConfirmacion("¿Desea filtrar por cliente?")){
+                    System.out.println("Introduce el email del cliente >> ");
+                    String emailCliente = teclado.nextLine();
+                   // controlador.solicitarMostrarPedidosEnviados(emailCliente); //ESTE ES EL MÉTODO MODIFICADO
+                }
+                controlador.solicitarMostrarPedidosEnviados();
                 break;
 
         }
@@ -188,7 +194,7 @@ public class Vista {
     /**
      * muestra mensaje cliente añadido correctamente
      */
-    public void clienteAñadido(){
+    public void clienteAnadido(){
         System.out.println("Cliente añadido correctamente");
     }
 
@@ -243,7 +249,7 @@ public class Vista {
     /**
      * muestra mensaje de cliente añadido correctamente
      */
-    public void articuloAñadido(){
+    public void articuloAnadido(){
         System.out.println("Artículo añadido correctamente");
     }
 
@@ -280,7 +286,7 @@ public class Vista {
     /**
      * mensaje de pedido añadido correctamente
      */
-    public void pedidoAñadido(){
+    public void pedidoAnadido(){
         System.out.println("Pedido añadido correctamente.");
     }
 
@@ -313,9 +319,9 @@ public class Vista {
      */
     public void mostrarListaPedidosEnviados(List<Pedido> pedidosEnviados){
         if (pedidosEnviados.isEmpty()){
-            System.out.println("No hay pedidos pendientes.");
+            System.out.println("No hay pedidos enviados.");
         }else{
-            System.out.println("Listado de pedidos pendientes: ");
+            System.out.println("Listado de pedidos enviados: ");
 
             for (Pedido pedido : pedidosEnviados){
                 System.out.println(pedido.toString());
@@ -325,6 +331,25 @@ public class Vista {
 
 
     //OTROS METODOS
+
+    /**
+     * Si durante la creación de un pedido el email del cliente no está registrado se pide que registre el usuario
+     * @param email
+     */
+    public void solicitarDatosNuevoCliente(String email){
+        System.out.println("\n NUEVO CLIENTE DETECTADO \n");
+        System.out.println("Introduce los datos para el cliente con email: "+ email);
+        System.out.print("Introduce el nombre >> ");
+        String nombre = teclado.nextLine();
+        System.out.print("Introduce el domicilio >> ");
+        String domicilio = teclado.nextLine();
+        System.out.print("Introduce el NIF >> ");
+        String nif = teclado.nextLine();
+
+        boolean premium = askConfirmacion("¿El cliente es premium?");
+
+        controlador.solicitaAnadirCliente(email,nombre,domicilio,nif,premium);
+    }
 
     /**
      * muestra el mensaje de error genérico al usuario.
@@ -362,4 +387,51 @@ public class Vista {
         }
         return indice;
     }
+
+    /**
+     * Pregunta al usuario Si o no devuelve un booleano ture s o S false otro
+     * @param pregunta pregunta a responder
+     * @return
+     */
+    private boolean askConfirmacion(String pregunta){
+        System.out.print( pregunta + "(S/N) >> ");
+        String respuesta = teclado.nextLine();
+        return respuesta.equalsIgnoreCase("S");
+    }
+
+    /**
+     * Se asegura que el Int introducido sea valido
+     * @param prompt
+     * @return
+     */
+    private int askInt(String prompt){
+        while(true){
+            System.out.print(prompt);
+            try{
+                int valor = Integer.parseInt(teclado.nextLine());
+                return valor;
+            }catch (NumberFormatException e){
+                System.out.println("ERROR: introduce un número entero válido");
+            }
+        }
+    }
+
+    /**
+     * se asegura que el double introducido sea válido
+     * @param prompt
+     * @return
+     */
+    private double askDouble(String prompt){
+        while (true){
+            System.out.print(prompt);
+            try{
+                double valor = Double.parseDouble(teclado.nextLine());
+                return valor;
+            }catch (NumberFormatException e){
+                System.out.println("ERROR: introduce un número decimal válido");
+            }
+        }
+    }
+
+
 }

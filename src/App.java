@@ -10,6 +10,9 @@ public class App {
         //Se crea el modelo
         TiendaOnline modelo = new TiendaOnline();
 
+        //Añadir datos de prueba
+        modelo.cargarDatosDePrueba();
+
         //Se crea la vista
         Vista vista = new Vista();
 
