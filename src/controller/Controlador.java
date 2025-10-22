@@ -18,7 +18,7 @@ public class Controlador {
     }
 
     // Gestión de clientes.
-    public void solicitaAnadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium){
+    public void solicitarAnadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium){
         try {
             modelo.anadirCliente(email, nombre, domicilio, nif,premium);
             vista.clienteAnadido();
@@ -86,14 +86,24 @@ public class Controlador {
         }
     }
 
-    public void solicitarMostarPedidosPendientes(){
+    public void solicitarMostrarPedidosPendientes() {
         List<Pedido> pendientes = modelo.mostrarPedidosPendientes();
         vista.mostrarListaPedidosPendientes(pendientes);
     }
 
-    public void solicitarMostrarPedidosEnviados(){
+    public void solicitarMostrarPedidosPendientesEmail(String emailCliente){
+        List<Pedido> pendientesEmail = modelo.mostrarPedidosPendientes(emailCliente);
+        vista.mostrarListaPedidosPendientes(pendientesEmail);
+    }
+
+
+    public void solicitarMostrarPedidosEnviados() {
         List<Pedido> enviados = modelo.mostrarPedidosEnviados();
         vista.mostrarListaPedidosEnviados(enviados);
+    }
+    public void solicitarMostrarPedidosEnviadosEmail(String emailCliente){
+        List<Pedido> enviadosEmail = modelo.mostrarPedidosEnviados(emailCliente);
+        vista.mostrarListaPedidosEnviados(enviadosEmail);
     }
 
     /**
@@ -102,4 +112,5 @@ public class Controlador {
     public void iniciar(){
         vista.menu();
     }
+
 }

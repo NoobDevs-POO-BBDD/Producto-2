@@ -81,7 +81,7 @@ public class Vista {
                 String nif = teclado.nextLine();
                 boolean premium = askConfirmacion("¿El cliente es premium?");
 
-                controlador.solicitaAnadirCliente(email, nombre, domicilio, nif,premium);
+                controlador.solicitarAnadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
                 controlador.solicitarMostrarClientes();
@@ -168,17 +168,17 @@ public class Vista {
                 if (askConfirmacion("¿Desea filtrar por cliente?")){
                     System.out.println("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
-                    controlador.solicitarMostarPedidosPendientes(emailCliente);  //ESTE ES EL MÉTODO MODIFICADO
+                    controlador.solicitarMostrarPedidosPendientesEmail(emailCliente);
 
                 }else{
-                    controlador.solicitarMostarPedidosPendientes();
+                    controlador.solicitarMostrarPedidosPendientes();
                 }
                 break;
             case 4:
                 if(askConfirmacion("¿Desea filtrar por cliente?")){
                     System.out.println("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
-                    controlador.solicitarMostrarPedidosEnviados(emailCliente); //ESTE ES EL MÉTODO MODIFICADO
+                    controlador.solicitarMostrarPedidosEnviadosEmail(emailCliente);
                 }
                 controlador.solicitarMostrarPedidosEnviados();
                 break;

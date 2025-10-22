@@ -7,6 +7,7 @@ import controller.Controlador;
  */
 public class App {
     public static void main(String[] args){
+
         //Se crea el modelo
         TiendaOnline modelo = new TiendaOnline();
 
@@ -28,12 +29,4 @@ public class App {
 
 }
 
-/**
- * Se añade / 100 para crear porcentaje en TiendaOnline CalcularPrecioPedido
- * Si no existe el cliente no podemos añadirlo y juraría que nos lo piden en el caso de uso salta illegalArgumentException en TiendaOnline anadirPEdido si el cliente es null
- * Modificar la vista para que pregunte filtrar por cliente  en mostrar pedidos enviados y pedidos pendientes (lo pide el enunciado)
- * He quitdado system.println de controlador subsituyendolo por vista. su metodo
- * Errores de copia y pega en vista tipo en pedidos pendientes mostraba mensaje lista pedidos enviado
- * Corregido el problema de introducción de datos en la vista
- */
 
