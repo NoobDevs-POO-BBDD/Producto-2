@@ -21,7 +21,7 @@ public class Pedido {
     }
 
     //getters and setters
-    public String numeroPedido() {
+    public String getNumeroPedido() {
         return numeroPedido;
     }
 
@@ -29,7 +29,7 @@ public class Pedido {
         this.numeroPedido = numeroPedido;
     }
 
-    public Cliente cliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
@@ -37,7 +37,7 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public int cantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
@@ -45,7 +45,7 @@ public class Pedido {
         this.cantidad = cantidad;
     }
 
-    public Articulo articulo() {
+    public Articulo getArticulo() {
         return articulo;
     }
 
@@ -53,7 +53,7 @@ public class Pedido {
         this.articulo = articulo;
     }
 
-    public LocalDateTime fechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
@@ -61,7 +61,7 @@ public class Pedido {
         this.fechaHora = fechaHora;
     }
 
-    public boolean estado() {
+    public boolean isEstado() {
         return estado;
     }
 
