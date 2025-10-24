@@ -1,6 +1,7 @@
 package onlinestore.tests;
 
 import model.Articulo;
+import model.ClientePremium;
 import model.ClienteStandar;
 import model.Pedido;
 import  org.junit.jupiter.api.Test;
@@ -55,12 +56,30 @@ void testConstructorYGetters() {
         assertFalse(pedido.isEstado());
     }
     @Test
+    void testCalcularPrecioTotalPedido() {
+        Articulo articulo = new Articulo("A003", "Teclado Mecánico RGB", 110.00, 10.00, 30);
+        ClientePremium cliente = new ClientePremium(
+                "carlos.r@mail.com", "Carlos Ruiz", "Calle Río 4", "45678901D", 20.0, 30
+        );
+
+        // Crear el pedido directamente
+        Pedido pedido = new Pedido("P002", cliente, articulo, 1, LocalDateTime.now(), false);
+
+        double precioBase = articulo.getPrecioVenta() * pedido.getCantidad();
+        double gastosEnvio = articulo.getGastosEnvio() * (1 - cliente.getDescuentoEnvio() / 100.0);
+        double precioEsperado = precioBase + gastosEnvio;
+
+        assertEquals(precioEsperado, pedido.getPrecioTotal(), 0.001);
+    }
+
+    @Test
     void testToString() {
         Articulo articulo = new Articulo("A001", "Libro", 25.0, 5.0, 2);
         ClienteStandar cliente = new ClienteStandar("ana@mail.com", "Ana", "Barcelona, 123", "11111111A", 0.0);
         LocalDateTime fecha = LocalDateTime.of(2025, 10, 23, 15, 30);
 
         Pedido pedido = new Pedido("P001", cliente, articulo, 3, fecha, true);
+        double precioTotal = pedido.getPrecioTotal();
 
         String esperado = "Pedidos{" +
                 "numeroPedido='P001'" +
@@ -69,6 +88,7 @@ void testConstructorYGetters() {
                 ", cantidad=3" +
                 ", fechaHora=" + fecha +
                 ", estado=true" +
+                ", precioTotal=" + String.format("%.2f", precioTotal) +
                 '}';
 
         assertEquals(esperado, pedido.toString());

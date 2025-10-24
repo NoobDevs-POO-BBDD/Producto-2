@@ -182,26 +182,6 @@ public class TiendaOnline {
         return minutosTranscurridos <= pedido.getArticulo().getTiempoPreparacion();
     }
 
-    public double calcularPrecioPedido(String numeroPedido) {
-        Pedido pedido = buscarPedido(numeroPedido);
-        if (pedido == null) {
-            return 0.0;
-        }
-
-        Articulo articulo = pedido.getArticulo();
-        int cantidad = pedido.getCantidad();
-        Cliente cliente = pedido.getCliente();
-
-        double precioBase = articulo.getPrecioVenta() * cantidad;
-        double gastosEnvio = articulo.getGastosEnvio();
-
-        // Aplicar descuento en envío para clientes premium
-        if (cliente instanceof ClientePremium premium) {
-            gastosEnvio *= (1 - premium.getDescuentoEnvio() / 100.0);
-        }
-
-        return precioBase + gastosEnvio;
-    }
 
     // === ESTADÍSTICAS ===
 

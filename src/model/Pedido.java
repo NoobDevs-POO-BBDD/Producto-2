@@ -9,6 +9,7 @@ public class Pedido {
     private int cantidad;
     private LocalDateTime fechaHora;
     private boolean estado;
+    private double precioTotal;
 
     //constructor
     public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDateTime fechaHora, boolean estado) {
@@ -18,6 +19,7 @@ public class Pedido {
         this.cantidad = cantidad;
         this.fechaHora = fechaHora;
         this.estado = estado;
+        this.precioTotal = calcularPrecioTotal();
     }
 
     //getters and setters
@@ -69,6 +71,28 @@ public class Pedido {
         this.estado = estado;
     }
 
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
+    }
+
+
+
+    private double calcularPrecioTotal() {
+        double precioBase = articulo.getPrecioVenta() * cantidad;
+        double gastosEnvio = articulo.getGastosEnvio();
+
+        if (cliente instanceof ClientePremium premium) {
+            gastosEnvio *= (1 - premium.getDescuentoEnvio() / 100.0);
+        }
+
+        return precioBase + gastosEnvio;
+    }
+
+
     @Override
     public String toString() {
         return "Pedidos{" +
@@ -78,6 +102,7 @@ public class Pedido {
                 ", cantidad=" + cantidad +
                 ", fechaHora=" + fechaHora +
                 ", estado=" + estado +
+                ", precioTotal=" + String.format("%.2f", precioTotal) +
                 '}';
     }
 }

@@ -97,3 +97,4 @@ class GestionPedidosTest {
         assertTrue(enviadosSofia.stream().allMatch(p -> p.getCliente().getEmail().equals("sofia.l@mail.com") && p.isEstado()));
     }
 }
+
