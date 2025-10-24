@@ -27,9 +27,7 @@ public class Vista {
         boolean salir = false;
 
         int opcion;
-
-        do{
-            System.out.println("""
+        System.out.println("""
                                                                                                                      ██████
                                                                                                                █████████████                                                                                  \s
                                                                                                          ████████████    ███
@@ -48,6 +46,7 @@ public class Vista {
                                                                                                          ███   ███
                                                                                                            █████
                     """);
+        do{
             System.out.println("\n---- MENÚ DE OPCIONES: ----");
             System.out.println("1.  Gestionar clientes");  // añadir cliente, mostrar clientes, mostrar clientes estandar, mostrar clientes premium
             System.out.println("2.  Gestionar Artículos"); //añadir artículo, mostrar artículo
