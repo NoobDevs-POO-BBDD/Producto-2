@@ -184,7 +184,7 @@ public class Vista {
                 break;
             case 3:
                 if (askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.println("Introduce el email del cliente >> ");
+                    System.out.print("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
                     controlador.solicitarMostrarPedidosPendientesEmail(emailCliente);
                 }else{
@@ -193,11 +193,13 @@ public class Vista {
                 break;
             case 4:
                 if(askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.println("Introduce el email del cliente >> ");
+                    System.out.print("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
                     controlador.solicitarMostrarPedidosEnviadosEmail(emailCliente);
+                }else {
+                    controlador.solicitarMostrarPedidosEnviados();
                 }
-                controlador.solicitarMostrarPedidosEnviados();
+
                 break;
 
         }
