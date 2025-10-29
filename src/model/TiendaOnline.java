@@ -1,5 +1,3 @@
-package model;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -19,14 +17,12 @@ public class TiendaOnline {
 
     // === GESTIÓN DE ARTÍCULOS ===
 
-    public void anadirArticulo(String codigo, String descripcion, Double precioVenta, Double gastosEnvio, int tiempoPreparacion) {
+    public void añadirArticulo(Articulo articulo) {
         // Verificar que no existe un artículo con el mismo código
-        if (buscarArticulo(codigo) != null) {
-            throw new IllegalArgumentException("Ya existe un artículo con el código: " + codigo);
-        }else{
-            Articulo articulo = new Articulo(codigo, descripcion, precioVenta, gastosEnvio, tiempoPreparacion);
-            articulos.add(articulo);
+        if (buscarArticulo(articulo.getCodigo()) != null) {
+            throw new IllegalArgumentException("Ya existe un artículo con el código: " + articulo.getCodigo());
         }
+        articulos.add(articulo);
     }
 
     public List<Articulo> mostrarArticulos() {
@@ -42,19 +38,12 @@ public class TiendaOnline {
 
     // === GESTIÓN DE CLIENTES ===
 
-    public void anadirCliente(String email, String nombre, String domicilio, String nif, Boolean premium) {
+    public void añadirCliente(Cliente cliente) {
         // Verificar que no existe un cliente con el mismo email (identificador)
-        if (buscarClientePorEmail(email) != null) {
-            throw new IllegalArgumentException("Ya existe un cliente con el email: " + email);
-        }else{
-            if (!premium){
-                ClienteStandar clienteStandar = new ClienteStandar(email, nombre, domicilio, nif, ClienteStandar.DESCUENTO_ENVIO_STANDAR);
-                clientes.add(clienteStandar);
-            }else{
-                ClientePremium clientePremium = new ClientePremium(email, nombre, domicilio, nif, ClientePremium.DESCUENTO_ENVIO_PREMIUM,ClientePremium.CUOTA_ANUAL_PREMIUM);
-                clientes.add(clientePremium);
-            }
+        if (buscarClientePorEmail(cliente.getEmail()) != null) {
+            throw new IllegalArgumentException("Ya existe un cliente con el email: " + cliente.getEmail());
         }
+        clientes.add(cliente);
     }
 
     public List<Cliente> mostrarClientes() {
@@ -89,7 +78,7 @@ public class TiendaOnline {
 
     // === GESTIÓN DE PEDIDOS ===
 
-    public void anadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
+    public void añadirPedido(String numeroPedido, String emailCliente, String codigoArticulo, int cantidad) {
         // Verificar que el artículo existe
         Articulo articulo = buscarArticulo(codigoArticulo);
         if (articulo == null) {
@@ -114,7 +103,7 @@ public class TiendaOnline {
                 cliente,
                 articulo,
                 cantidad,
-                LocalDateTime.now(),
+                LocalDate.now(),
                 false // estado inicial: pendiente (no enviado)
         );
         pedidos.add(pedido);  // CORREGIDO: pedidos.add() no pedido.add()
@@ -130,27 +119,27 @@ public class TiendaOnline {
 
     public List<Pedido> mostrarPedidosPendientes() {  // CORREGIDO: mostrarPedidosPendientes (plural)
         return pedidos.stream()  // CORREGIDO: pedidos.stream() no pedido.stream()
-                .filter(pedido -> !pedido.isEstado()) // estado false = pendiente
+                .filter(pedido -> !pedido.estado()) // estado false = pendiente
                 .toList();
     }
 
     public List<Pedido> mostrarPedidosPendientes(String emailCliente) {  // CORREGIDO: plural
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(pedido -> !pedido.isEstado() &&
-                        pedido.getCliente().getEmail().equals(emailCliente))
+                .filter(pedido -> !pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
     public List<Pedido> mostrarPedidosEnviados() {  // CORREGIDO: plural
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(Pedido::isEstado) // estado true = enviado
+                .filter(Pedido::estado) // estado true = enviado
                 .toList();
     }
 
     public List<Pedido> mostrarPedidosEnviados(String emailCliente) {  // CORREGIDO: plural
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(pedido -> pedido.isEstado() &&
-                        pedido.getCliente().getEmail().equals(emailCliente))
+                .filter(pedido -> pedido.estado() &&
+                        pedido.cliente().getEmail().equals(emailCliente))
                 .toList();
     }
 
@@ -165,23 +154,43 @@ public class TiendaOnline {
 
     public Pedido buscarPedido(String numeroPedido) {
         return pedidos.stream()  // CORREGIDO: pedidos.stream()
-                .filter(pedido -> pedido.getNumeroPedido().equals(numeroPedido))
+                .filter(pedido -> pedido.numeroPedido().equals(numeroPedido))
                 .findFirst()
                 .orElse(null);
     }
 
     private boolean estaEnviado(Pedido pedido) {
-        return pedido.isEstado();
+        return pedido.estado();
     }
 
     private boolean puedeSerCancelado(Pedido pedido) {
-        LocalDateTime fechaPedido = pedido.getFechaHora();
+        LocalDateTime fechaPedido = pedido.fechaHora().atStartOfDay();
         LocalDateTime ahora = LocalDateTime.now();
         long minutosTranscurridos = ChronoUnit.MINUTES.between(fechaPedido, ahora);
 
-        return minutosTranscurridos <= pedido.getArticulo().getTiempoPreparacion();
+        return minutosTranscurridos <= pedido.articulo().getTiempoPreparacion();
     }
 
+    public double calcularPrecioPedido(String numeroPedido) {
+        Pedido pedido = buscarPedido(numeroPedido);
+        if (pedido == null) {
+            return 0.0;
+        }
+
+        Articulo articulo = pedido.articulo();
+        int cantidad = pedido.cantidad();
+        Cliente cliente = pedido.cliente();
+
+        double precioBase = articulo.getPrecioVenta() * cantidad;
+        double gastosEnvio = articulo.getGastosEnvio();
+
+        // Aplicar descuento en envío para clientes premium
+        if (cliente instanceof ClientePremium premium) {
+            gastosEnvio *= (1 - premium.getDescuentoEnvio());
+        }
+
+        return precioBase + gastosEnvio;
+    }
 
     // === ESTADÍSTICAS ===
 
@@ -224,73 +233,5 @@ public class TiendaOnline {
                 " (Pendientes: " + getTotalPedidosPendientes() +
                 ", Enviados: " + getTotalPedidosEnviados() + ")" +
                 '}';
-    }
-
-    /**
-     * Carga un conjunto de datos de prueba en el modelo.
-     */
-    public void cargarDatosDePrueba() {
-        System.out.println("Cargando datos de prueba...");
-        try {
-            // 1. Añadir 5 Artículos
-            anadirArticulo("A001", "Laptop Pro 16", 1499.99, 15.00, 120); // 120 min prep
-            anadirArticulo("A002", "Mouse Inalámbrico", 35.50, 5.00, 10);    // 10 min prep
-            anadirArticulo("A003", "Teclado Mecánico RGB", 110.00, 10.00, 30); // 30 min prep
-            anadirArticulo("A004", "Monitor Curvo 32", 450.00, 20.00, 180); // 180 min prep
-            anadirArticulo("A005", "Silla Ergonómica Pro", 220.00, 30.00, 60);  // 60 min prep
-
-            // 2. Añadir 5 Clientes (3 Estandar, 2 Premium)
-            // Estandar
-            anadirCliente("ana.g@mail.com", "Ana García", "Calle Sol 1", "12345678A", false);
-            anadirCliente("luis.m@mail.com", "Luis Martínez", "Av. Luna 2", "23456789B", false);
-            anadirCliente("eva.p@mail.com", "Eva Pena", "Plaza Mar 3", "34567890C", false);
-            // Premium
-            anadirCliente("carlos.r@mail.com", "Carlos Ruiz", "Calle Río 4", "45678901D", true);
-            anadirCliente("sofia.l@mail.com", "Sofia López", "Av. Monte 5", "56789012E", true);
-
-            // 3. Añadir 5 Pedidos (3 Pendientes, 2 Enviados)
-            // Para esto, necesitamos acceder a los objetos creados:
-            Articulo art1 = buscarArticulo("A002"); // 10 min prep
-            Articulo art2 = buscarArticulo("A001"); // 120 min prep
-            Articulo art3 = buscarArticulo("A003"); // 30 min prep
-            Articulo art4 = buscarArticulo("A004");
-            Articulo art5 = buscarArticulo("A005");
-
-            Cliente cli1 = buscarClientePorEmail("ana.g@mail.com");
-            Cliente cli2 = buscarClientePorEmail("luis.m@mail.com");
-            Cliente cli3 = buscarClientePorEmail("carlos.r@mail.com"); // Premium
-            Cliente cli4 = buscarClientePorEmail("sofia.l@mail.com"); // Premium
-            Cliente cli5 = buscarClientePorEmail("eva.p@mail.com");
-
-            // --- Pedidos Pendientes ---
-            // Pedido 1 (Pendiente, Reciente -> Cancelable)
-            // Usamos LocalDateTime.now() para que la lógica de cancelación funcione (ver corrección abajo)
-            Pedido p1 = new Pedido("P001", cli1, art1, 2, LocalDateTime.now(), false);
-            pedidos.add(p1);
-
-            // Pedido 2 (Pendiente, Reciente -> Cancelable)
-            Pedido p2 = new Pedido("P002", cli3, art3, 1, LocalDateTime.now(), false);
-            pedidos.add(p2);
-
-            // Pedido 3 (Pendiente, Antiguo -> NO Cancelable)
-            // Creado hace 1 día. Su tiempo (120 min) ya pasó.
-            Pedido p3 = new Pedido("P003", cli2, art2, 1, LocalDateTime.now().minusDays(1), false);
-            pedidos.add(p3);
-
-
-            // --- Pedidos Enviados ---
-            // Pedido 4 (Enviado)
-            Pedido p4 = new Pedido("P004", cli4, art4, 1, LocalDateTime.now().minusDays(2), true); // true = enviado
-            pedidos.add(p4);
-
-            // Pedido 5 (Enviado)
-            Pedido p5 = new Pedido("P005", cli5, art5, 1, LocalDateTime.now().minusDays(3), true); // true = enviado
-            pedidos.add(p5);
-
-            System.out.println("Datos de prueba cargados correctamente.");
-
-        } catch (Exception e) {
-            System.err.println("ERROR al cargar datos de prueba: " + e.getMessage());
-        }
     }
 }

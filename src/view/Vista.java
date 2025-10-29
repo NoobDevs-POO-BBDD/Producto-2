@@ -27,25 +27,7 @@ public class Vista {
         boolean salir = false;
 
         int opcion;
-        System.out.println("""
-                                                                                                                     ██████
-                                                                                                               █████████████                                                                                  \s
-                                                                                                         ████████████    ███
-                                                                                  █████████        ████████████          ████
-                               ████████╗██╗███████╗███╗   ██╗██████╗  █████╗      ██████████  ███████████                ████
-                               ╚══██╔══╝██║██╔════╝████╗  ██║██╔══██╗██╔══██╗          ██████████                      ████
-                                  ██║   ██║█████╗  ██╔██╗ ██║██║  ██║███████║           █████                          ████
-                                  ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║             ████                         ████
-                                  ██║   ██║███████╗██║ ╚████║██████╔╝██║  ██║              ████                      █████
-                                  ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝               █████              ██████████
-                                ██████╗ ███╗   ██╗██╗     ██╗███╗   ██╗███████╗                 █████       █████████████
-                               ██╔═══██╗████╗  ██║██║     ██║████╗  ██║██╔════╝                  █████████████████  █████████
-                               ██║   ██║██╔██╗ ██║██║     ██║██╔██╗ ██║█████╗                      █████████████    ██    ███
-                               ██║   ██║██║╚██╗██║██║     ██║██║╚██╗██║██╔══╝                            █████████  ███   ███
-                               ╚██████╔╝██║ ╚████║███████╗██║██║ ╚████║███████╗                          ██    ███   ██████
-                                                                                                         ███   ███
-                                                                                                           █████
-                    """);
+
         do{
             System.out.println("\n---- MENÚ DE OPCIONES: ----");
             System.out.println("1.  Gestionar clientes");  // añadir cliente, mostrar clientes, mostrar clientes estandar, mostrar clientes premium
@@ -97,18 +79,20 @@ public class Vista {
                 String domicilio = teclado.nextLine();
                 System.out.print("Introduce el NIF >> ");
                 String nif = teclado.nextLine();
-                boolean premium = askConfirmacion("¿El cliente es premium?");
+                System.out.print("Si es cliente prémium pulsa 1 >> ");  //Se pasa un booleano con true si es premium, así se puede añadir la cuota y el descuento
+                String entrada = teclado.nextLine();
+                boolean premium = entrada.equals("1");
 
-                controlador.solicitarAnadirCliente(email, nombre, domicilio, nif,premium);
+                controlador.añadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
-                controlador.solicitarMostrarClientes();
+                controlador.mostrarClientes();
                 break;
             case 3:
-                controlador.solicitarMostrarClientesEstandar();
+                controlador.mostrarClientesEstandar();
                 break;
             case 4:
-                controlador.solicitarMostrarClientesPremium();
+                controlador.mostrarClientesPremium();
                 break;
         }
     }
@@ -131,22 +115,25 @@ public class Vista {
                 String codigo = teclado.nextLine();
                 System.out.print("Introduce la descripción >> ");
                 String descripcion = teclado.nextLine();
-                double precioVenta = askDouble("Introduce el precio de venta >> ");
-                double gastosEnvio = askDouble("Introduce el precio de envío >> ");
-                int tiempoPreparacion = askInt("Introduce el tiempo de preparación >> ");
+                System.out.print("Introduce el precio de venta >> ");
+                double precioVenta = Double.parseDouble(teclado.nextLine());
+                System.out.print("Introduce el precio de envío >> ");
+                double gastosEnvio = Double.parseDouble(teclado.nextLine());
+                System.out.print("Introduce el tiempo de preparación >> ");
+                int tiempoPreparacion = Integer.parseInt(teclado.nextLine());
 
-                controlador.solicitarAnadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
+                controlador.añadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
                 break;
 
             case 2:
-                controlador.solicitarMostrarArticulos();
+                controlador.mostrarArticulos();
                 break;
 
             case 3:
                 System.out.print("Introduce el código del artículo a buscar >> ");
                 String codigoBuscar = teclado.nextLine();
 
-                controlador.solicitarBuscarArticulo(codigoBuscar);
+                controlador.buscarArticulo(codigoBuscar);
                 break;
         }
     }
@@ -172,34 +159,22 @@ public class Vista {
                 String cliente = teclado.nextLine();
                 System.out.print("Introduce el código del artículo >> ");
                 String articulo = teclado.nextLine();
-                int cantidad = askInt("Introduce la cantidad >> ");
-                //Aquí
-                controlador.solicitarAnadirPedido(numeroPedido,cliente,articulo,cantidad);
+                System.out.print("Introduce la cantidad >> ");
+                int cantidad = Integer.parseInt(teclado.nextLine());
+
+                controlador.añadirPedido(numeroPedido,cliente,articulo,cantidad);
                 break;
             case 2:
                 System.out.print("Introduce el número de pedido >> ");
                 String numeroPedidoBorrar = teclado.nextLine();
 
-                controlador.solicitarEliminarPedido(numeroPedidoBorrar);
+                controlador.eliminarPedido(numeroPedidoBorrar);
                 break;
             case 3:
-                if (askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.print("Introduce el email del cliente >> ");
-                    String emailCliente = teclado.nextLine();
-                    controlador.solicitarMostrarPedidosPendientesEmail(emailCliente);
-                }else{
-                    controlador.solicitarMostrarPedidosPendientes();
-                }
+                controlador.mostarPedidosPendientes();
                 break;
             case 4:
-                if(askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.print("Introduce el email del cliente >> ");
-                    String emailCliente = teclado.nextLine();
-                    controlador.solicitarMostrarPedidosEnviadosEmail(emailCliente);
-                }else {
-                    controlador.solicitarMostrarPedidosEnviados();
-                }
-
+                controlador.mostrarPedidosEnviados();
                 break;
 
         }
@@ -213,7 +188,7 @@ public class Vista {
     /**
      * muestra mensaje cliente añadido correctamente
      */
-    public void clienteAnadido(){
+    public void clienteAñadido(){
         System.out.println("Cliente añadido correctamente");
     }
 
@@ -268,7 +243,7 @@ public class Vista {
     /**
      * muestra mensaje de cliente añadido correctamente
      */
-    public void articuloAnadido(){
+    public void articuloAñadido(){
         System.out.println("Artículo añadido correctamente");
     }
 
@@ -305,7 +280,7 @@ public class Vista {
     /**
      * mensaje de pedido añadido correctamente
      */
-    public void pedidoAnadido(){
+    public void pedidoAñadido(){
         System.out.println("Pedido añadido correctamente.");
     }
 
@@ -338,9 +313,9 @@ public class Vista {
      */
     public void mostrarListaPedidosEnviados(List<Pedido> pedidosEnviados){
         if (pedidosEnviados.isEmpty()){
-            System.out.println("No hay pedidos enviados.");
+            System.out.println("No hay pedidos pendientes.");
         }else{
-            System.out.println("Listado de pedidos enviados: ");
+            System.out.println("Listado de pedidos pendientes: ");
 
             for (Pedido pedido : pedidosEnviados){
                 System.out.println(pedido.toString());
@@ -350,25 +325,6 @@ public class Vista {
 
 
     //OTROS METODOS
-
-    /**
-     * Si durante la creación de un pedido el email del cliente no está registrado se pide que registre el usuario
-     * @param email
-     */
-    public void solicitarDatosNuevoCliente(String email){
-        System.out.println("\n NUEVO CLIENTE DETECTADO \n");
-        System.out.println("Introduce los datos para el cliente con email: "+ email);
-        System.out.print("Introduce el nombre >> ");
-        String nombre = teclado.nextLine();
-        System.out.print("Introduce el domicilio >> ");
-        String domicilio = teclado.nextLine();
-        System.out.print("Introduce el NIF >> ");
-        String nif = teclado.nextLine();
-
-        boolean premium = askConfirmacion("¿El cliente es premium?");
-
-        controlador.solicitarAnadirCliente(email,nombre,domicilio,nif,premium);
-    }
 
     /**
      * muestra el mensaje de error genérico al usuario.
@@ -406,51 +362,4 @@ public class Vista {
         }
         return indice;
     }
-
-    /**
-     * Pregunta al usuario Si o no devuelve un booleano ture s o S false otro
-     * @param pregunta pregunta a responder
-     * @return
-     */
-    private boolean askConfirmacion(String pregunta){
-        System.out.print( pregunta + "(S/N) >> ");
-        String respuesta = teclado.nextLine();
-        return respuesta.equalsIgnoreCase("S");
-    }
-
-    /**
-     * Se asegura que el Int introducido sea valido
-     * @param prompt
-     * @return
-     */
-    private int askInt(String prompt){
-        while(true){
-            System.out.print(prompt);
-            try{
-                int valor = Integer.parseInt(teclado.nextLine());
-                return valor;
-            }catch (NumberFormatException e){
-                System.out.println("ERROR: introduce un número entero válido");
-            }
-        }
-    }
-
-    /**
-     * se asegura que el double introducido sea válido
-     * @param prompt
-     * @return
-     */
-    private double askDouble(String prompt){
-        while (true){
-            System.out.print(prompt);
-            try{
-                double valor = Double.parseDouble(teclado.nextLine());
-                return valor;
-            }catch (NumberFormatException e){
-                System.out.println("ERROR: introduce un número decimal válido");
-            }
-        }
-    }
-
-
 }
