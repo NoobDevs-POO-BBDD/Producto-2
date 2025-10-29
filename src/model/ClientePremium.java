@@ -1,3 +1,5 @@
+package model;
+
 public class ClientePremium extends Cliente {
     private double descuentoEnvio = 0.2;
     private int cuotaAnual = 30;

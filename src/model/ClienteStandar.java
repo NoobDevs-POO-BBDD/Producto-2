@@ -1,3 +1,5 @@
+package model;
+
 public class ClienteStandar extends Cliente {
     private double descuentoEnvio = 0.0;
 
