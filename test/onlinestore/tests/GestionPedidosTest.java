@@ -14,13 +14,13 @@ class GestionPedidosTest {
     TiendaOnline tienda;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception{
         tienda = new TiendaOnline();
         tienda.cargarDatosDePrueba();
     }
 
     @Test
-    void testAnadirPedidoValido() {
+    void testAnadirPedidoValido()throws Exception {
         tienda.anadirPedido("P006", "ana.g@mail.com", "A001", 2);
         Pedido pedido = tienda.buscarPedido("P006");
         assertNotNull(pedido);
@@ -30,7 +30,7 @@ class GestionPedidosTest {
     }
 
     @Test
-    void testAnadirPedidoArticuloNoExiste() {
+    void testAnadirPedidoArticuloNoExiste() throws Exception{
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             tienda.anadirPedido("P007", "ana.g@mail.com", "A999", 1);
         });
@@ -54,33 +54,33 @@ class GestionPedidosTest {
     }
 
     @Test
-    void testEliminarPedidoPendienteCancelable() {
+    void testEliminarPedidoPendienteCancelable() throws Exception{
         boolean eliminado = tienda.eliminarPedido("P001"); // Pedido reciente y pendiente
         assertTrue(eliminado);
         assertNull(tienda.buscarPedido("P001"));
     }
 
     @Test
-    void testEliminarPedidoNoCancelable() {
+    void testEliminarPedidoNoCancelable() throws Exception{
         boolean eliminado = tienda.eliminarPedido("P003"); // Pedido antiguo
         assertFalse(eliminado);
     }
 
     @Test
-    void testEliminarPedidoEnviado() {
+    void testEliminarPedidoEnviado() throws Exception{
         boolean eliminado = tienda.eliminarPedido("P004"); // Pedido enviado
         assertFalse(eliminado);
     }
 
     @Test
-    void testMarcarPedidoComoEnviado() {
+    void testMarcarPedidoComoEnviado() throws Exception{
         tienda.marcarPedidoComoEnviado("P002");
         Pedido pedido = tienda.buscarPedido("P002");
         assertTrue(pedido.isEstado());
     }
 
     @Test
-    void testMostrarPedidosPendientesYEnviados() {
+    void testMostrarPedidosPendientesYEnviados()throws Exception {
         List<Pedido> pendientes = tienda.mostrarPedidosPendientes();
         List<Pedido> enviados = tienda.mostrarPedidosEnviados();
 
@@ -89,7 +89,7 @@ class GestionPedidosTest {
     }
 
     @Test
-    void testMostrarPedidosFiltradosPorCliente() {
+    void testMostrarPedidosFiltradosPorCliente() throws Exception{
         List<Pedido> pendientesAna = tienda.mostrarPedidosPendientes("ana.g@mail.com");
         List<Pedido> enviadosSofia = tienda.mostrarPedidosEnviados("sofia.l@mail.com");
 
@@ -97,4 +97,3 @@ class GestionPedidosTest {
         assertTrue(enviadosSofia.stream().allMatch(p -> p.getCliente().getEmail().equals("sofia.l@mail.com") && p.isEstado()));
     }
 }
-

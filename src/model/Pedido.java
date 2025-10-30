@@ -1,27 +1,29 @@
 package model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Pedido {
     private String numeroPedido;
     private Cliente cliente;
     private Articulo articulo;
     private int cantidad;
-    private LocalDate fechaHora;
+    private LocalDateTime fechaHora;
     private boolean estado;
+    private double precioTotal;
 
     //constructor
-    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDate fechaHora, boolean estado) {
+    public Pedido(String numeroPedido, Cliente cliente, Articulo articulo, int cantidad, LocalDateTime fechaHora, boolean estado) {
         this.numeroPedido = numeroPedido;
         this.cliente = cliente;
         this.articulo = articulo;
         this.cantidad = cantidad;
         this.fechaHora = fechaHora;
         this.estado = estado;
+        this.precioTotal = calcularPrecioTotal();
     }
 
     //getters and setters
-    public String numeroPedido() {
+    public String getNumeroPedido() {
         return numeroPedido;
     }
 
@@ -29,7 +31,7 @@ public class Pedido {
         this.numeroPedido = numeroPedido;
     }
 
-    public Cliente cliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
@@ -37,7 +39,7 @@ public class Pedido {
         this.cliente = cliente;
     }
 
-    public int cantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
@@ -45,7 +47,7 @@ public class Pedido {
         this.cantidad = cantidad;
     }
 
-    public Articulo articulo() {
+    public Articulo getArticulo() {
         return articulo;
     }
 
@@ -53,21 +55,43 @@ public class Pedido {
         this.articulo = articulo;
     }
 
-    public LocalDate fechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(LocalDate fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
-    public boolean estado() {
+    public boolean isEstado() {
         return estado;
     }
 
     public void setEstado(boolean estado) {
         this.estado = estado;
     }
+
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
+    }
+
+
+
+    private double calcularPrecioTotal() {
+        double precioBase = articulo.getPrecioVenta() * cantidad;
+        double gastosEnvio = articulo.getGastosEnvio();
+
+        if (cliente instanceof ClientePremium premium) {
+            gastosEnvio *= (1 - premium.getDescuentoEnvio() / 100.0);
+        }
+
+        return precioBase + gastosEnvio;
+    }
+
 
     @Override
     public String toString() {
@@ -78,6 +102,7 @@ public class Pedido {
                 ", cantidad=" + cantidad +
                 ", fechaHora=" + fechaHora +
                 ", estado=" + estado +
+                ", precioTotal=" + String.format("%.2f", precioTotal) +
                 '}';
     }
 }
