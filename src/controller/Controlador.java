@@ -1,4 +1,3 @@
-
 package controller;
 
 import model.Articulo;
@@ -25,22 +24,20 @@ public class Controlador {
             vista.clienteAnadido();
         } catch (IllegalArgumentException e) {
             vista.mostrarError(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void solicitarMostrarClientes() throws Exception {
+    public void solicitarMostrarClientes(){
         List<Cliente> listaDeClientes = modelo.mostrarClientes();
         vista.mostrarListaClientes(listaDeClientes);
     }
 
-    public void solicitarMostrarClientesEstandar() throws Exception {
+    public void solicitarMostrarClientesEstandar(){
         List<Cliente> listaDeClientesEstandar = modelo.mostrarClientesEstandar();
         vista.mostarListaClientesEstandar(listaDeClientesEstandar);
     }
 
-    public void solicitarMostrarClientesPremium() throws Exception {
+    public void solicitarMostrarClientesPremium(){
         List<Cliente> listaDeClientesPremium = modelo.mostrarClientesPremium();
         vista.mostrarListaClientesPremium(listaDeClientesPremium);
     }
@@ -51,24 +48,24 @@ public class Controlador {
         try {
             modelo.anadirArticulo(codigo,descripcion,precioVenta,gastosEnvio,tiempoPreparacion);
             vista.articuloAnadido();
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             vista.mostrarError(e.getMessage());
         }
     }
 
-    public void solicitarMostrarArticulos()throws Exception{
+    public void solicitarMostrarArticulos(){
         List<Articulo> listaArticulo = modelo.mostrarArticulos();
         vista.mostrarListaArticulos(listaArticulo);
     }
 
-    public void solicitarBuscarArticulo(String codigoBuscar) throws Exception{
+    public void solicitarBuscarArticulo(String codigoBuscar) {
         Articulo articuloBuscado = modelo.buscarArticulo(codigoBuscar);
         vista.articuloBuscado(articuloBuscado);
     }
 
     //Gestión de pedidos.
 
-    public void solicitarAnadirPedido(String numeroPedido,String cliente,String articulo,int cantidad) throws Exception {
+    public void solicitarAnadirPedido(String numeroPedido,String cliente,String articulo,int cantidad){
         try {
             modelo.anadirPedido(numeroPedido,cliente,articulo,cantidad);
             vista.pedidoAnadido();
@@ -87,12 +84,10 @@ public class Controlador {
             }else{
                 vista.mostrarError(e.getMessage());
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
-    public void solicitarEliminarPedido(String numeroPedidoBorrar) throws Exception {
+    public void solicitarEliminarPedido(String numeroPedidoBorrar){
         boolean verdadero = modelo.eliminarPedido(numeroPedidoBorrar);
         if(verdadero){
             List<Pedido> listaActualizada = modelo.mostrarPedidosPendientes();
@@ -104,21 +99,21 @@ public class Controlador {
         }
     }
 
-    public void solicitarMostrarPedidosPendientes() throws Exception {
+    public void solicitarMostrarPedidosPendientes() {
         List<Pedido> pendientes = modelo.mostrarPedidosPendientes();
         vista.mostrarListaPedidosPendientes(pendientes);
     }
 
-    public void solicitarMostrarPedidosPendientesEmail(String emailCliente) throws Exception {
+    public void solicitarMostrarPedidosPendientesEmail(String emailCliente){
         List<Pedido> pendientesEmail = modelo.mostrarPedidosPendientes(emailCliente);
         vista.mostrarListaPedidosPendientes(pendientesEmail);
     }
 
-    public void solicitarMostrarPedidosEnviados() throws Exception {
+    public void solicitarMostrarPedidosEnviados() {
         List<Pedido> enviados = modelo.mostrarPedidosEnviados();
         vista.mostrarListaPedidosEnviados(enviados);
     }
-    public void solicitarMostrarPedidosEnviadosEmail(String emailCliente) throws Exception {
+    public void solicitarMostrarPedidosEnviadosEmail(String emailCliente){
         List<Pedido> enviadosEmail = modelo.mostrarPedidosEnviados(emailCliente);
         vista.mostrarListaPedidosEnviados(enviadosEmail);
     }
@@ -126,7 +121,7 @@ public class Controlador {
     /**
      * Se inicia la aplicación llamando a la función principal de vista
      */
-    public void iniciar() throws Exception {
+    public void iniciar(){
         vista.menu();
     }
 

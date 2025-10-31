@@ -13,13 +13,13 @@ class TiendaOnlineTest {
     TiendaOnline tienda;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         tienda = new TiendaOnline();
         tienda.cargarDatosDePrueba();
     }
 
     @Test
-    void testArraysVacios() throws Exception {
+    void testArraysVacios() {
         // comprobaciones básicas
         assertNotNull(tienda.mostrarArticulos());
         assertNotNull(tienda.mostrarClientes());
@@ -27,7 +27,7 @@ class TiendaOnlineTest {
         assertEquals(5, tienda.mostrarClientes().size());
     }
     @Test
-    void testToString() throws Exception {
+    void testToString() {
         String resultado = tienda.toString();
 
         // Comprobamos que el resultado contiene los números correctos de artículos, clientes y pedidos
