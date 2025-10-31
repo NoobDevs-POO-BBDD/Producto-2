@@ -1,3 +1,4 @@
+
 import model.TiendaOnline;
 import view.Vista;
 import controller.Controlador;
@@ -6,12 +7,9 @@ import controller.Controlador;
  * Clase principal dónde se une el modelo la vista y el controlador.
  */
 public class App {
-    public static void main(String[] args){
-        //Se crea el modelo
-        TiendaOnline modelo = new TiendaOnline();
+    public static void main(String[] args) throws Exception {
 
-        //Añadir datos de prueba
-        modelo.cargarDatosDePrueba();
+        TiendaOnline modelo = new TiendaOnline(); // sin pasar DAOs
 
         //Se crea la vista
         Vista vista = new Vista();
@@ -27,4 +25,3 @@ public class App {
     }
 
 }
-

@@ -23,11 +23,29 @@ public class Vista {
         this.controlador = controlador;
     }
 
-    public void menu(){
+    public void menu() throws Exception {
         boolean salir = false;
 
         int opcion;
-
+        System.out.println("""
+                                                                                                                     ██████
+                                                                                                               █████████████                                                                                  \s
+                                                                                                         ████████████    ███
+                                                                                  █████████        ████████████          ████
+                               ████████╗██╗███████╗███╗   ██╗██████╗  █████╗      ██████████  ███████████                ████
+                               ╚══██╔══╝██║██╔════╝████╗  ██║██╔══██╗██╔══██╗          ██████████                      ████
+                                  ██║   ██║█████╗  ██╔██╗ ██║██║  ██║███████║           █████                          ████
+                                  ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║             ████                         ████
+                                  ██║   ██║███████╗██║ ╚████║██████╔╝██║  ██║              ████                      █████
+                                  ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝               █████              ██████████
+                                ██████╗ ███╗   ██╗██╗     ██╗███╗   ██╗███████╗                 █████       █████████████
+                               ██╔═══██╗████╗  ██║██║     ██║████╗  ██║██╔════╝                  █████████████████  █████████
+                               ██║   ██║██╔██╗ ██║██║     ██║██╔██╗ ██║█████╗                      █████████████    ██    ███
+                               ██║   ██║██║╚██╗██║██║     ██║██║╚██╗██║██╔══╝                            █████████  ███   ███
+                               ╚██████╔╝██║ ╚████║███████╗██║██║ ╚████║███████╗                          ██    ███   ██████
+                                                                                                         ███   ███
+                                                                                                           █████
+                    """);
         do{
             System.out.println("\n---- MENÚ DE OPCIONES: ----");
             System.out.println("1.  Gestionar clientes");  // añadir cliente, mostrar clientes, mostrar clientes estandar, mostrar clientes premium
@@ -61,7 +79,7 @@ public class Vista {
      * true 0 false si es premium, así se puede añadir la cuota y el descuento. Además se muestra el listado de todos
      * los clientes, listado clientes estándar, listado clientes prémium.
      */
-    public void gestionarClientes(){
+    public void gestionarClientes() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo cliente");
         System.out.println("2. Mostrar todos los clientes");
@@ -81,7 +99,7 @@ public class Vista {
                 String nif = teclado.nextLine();
                 boolean premium = askConfirmacion("¿El cliente es premium?");
 
-                controlador.solicitaAnadirCliente(email, nombre, domicilio, nif,premium);
+                controlador.solicitarAnadirCliente(email, nombre, domicilio, nif,premium);
                 break;
             case 2:
                 controlador.solicitarMostrarClientes();
@@ -99,7 +117,7 @@ public class Vista {
      * En esta función se solicita al usuário si desea añadir nuevo artículo, mostrar todos los artículos o buscar un artículo por código.
      * el controlador recibe una función con los campos necesarios para realizarla.
      */
-    public void gestionarArticulos(){
+    public void gestionarArticulos() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo artículo");
         System.out.println("2. Mostrar artículos");
@@ -121,7 +139,7 @@ public class Vista {
                 break;
 
             case 2:
-                controlador.solicitarMostrarArticulos();
+                controlador.solicitarMostrarArticulos ();
                 break;
 
             case 3:
@@ -137,7 +155,7 @@ public class Vista {
      * Esta función gestiona los pedidos, añade un nuevo pedido (sin solicitar fecha ni estado), elimina pedidos con el
      * nuemro de pedido, muestra los pedidos pendientes y los pedidos enviados.
      */
-    public void gestionarPedidos(){
+    public void gestionarPedidos() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo pedido");
         System.out.println("2. Eliminar pedido");
@@ -166,21 +184,22 @@ public class Vista {
                 break;
             case 3:
                 if (askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.println("Introduce el email del cliente >> ");
+                    System.out.print("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
-                   // controlador.solicitarMostarPedidosPendientes(emailCliente);  //ESTE ES EL MÉTODO MODIFICADO
-
+                    controlador.solicitarMostrarPedidosPendientesEmail(emailCliente);
                 }else{
-                    controlador.solicitarMostarPedidosPendientes();
+                    controlador.solicitarMostrarPedidosPendientes();
                 }
                 break;
             case 4:
                 if(askConfirmacion("¿Desea filtrar por cliente?")){
-                    System.out.println("Introduce el email del cliente >> ");
+                    System.out.print("Introduce el email del cliente >> ");
                     String emailCliente = teclado.nextLine();
-                   // controlador.solicitarMostrarPedidosEnviados(emailCliente); //ESTE ES EL MÉTODO MODIFICADO
+                    controlador.solicitarMostrarPedidosEnviadosEmail(emailCliente);
+                }else {
+                    controlador.solicitarMostrarPedidosEnviados();
                 }
-                controlador.solicitarMostrarPedidosEnviados();
+
                 break;
 
         }
@@ -348,7 +367,7 @@ public class Vista {
 
         boolean premium = askConfirmacion("¿El cliente es premium?");
 
-        controlador.solicitaAnadirCliente(email,nombre,domicilio,nif,premium);
+        controlador.solicitarAnadirCliente(email,nombre,domicilio,nif,premium);
     }
 
     /**
@@ -432,6 +451,7 @@ public class Vista {
             }
         }
     }
+
 
 
 }
