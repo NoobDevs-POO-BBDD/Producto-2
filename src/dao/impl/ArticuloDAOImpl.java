@@ -43,13 +43,14 @@ public class ArticuloDAOImpl implements ArticuloDAO {
                 try{
                     conn.close();
                 }catch(SQLException e){
+                    System.err.println("Error al cerrar la conexión: " + e.getMessage());
                 }
             }
         }
     }
 
     @Override
-    public Articulo getArticuloPorCodigo(String codigo) throws Exception {
+    public Articulo getArticuloPorCodigo(String codigo) throws SQLException {
 
         try (Connection conn = ConexionBD.getConnection();
              PreparedStatement ps = conn.prepareCall("{CALL sp_getArticuloByCode(?)}")) {
@@ -71,7 +72,7 @@ public class ArticuloDAOImpl implements ArticuloDAO {
     }
 
     @Override
-    public List<Articulo> getTodosLosArticulos() throws Exception {
+    public List<Articulo> getTodosLosArticulos() throws SQLException {
         List<Articulo> lista = new ArrayList<>();
 
         try (Connection conn = ConexionBD.getConnection();
