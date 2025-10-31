@@ -1,3 +1,4 @@
+
 import model.TiendaOnline;
 import view.Vista;
 import controller.Controlador;
@@ -6,13 +7,9 @@ import controller.Controlador;
  * Clase principal dónde se une el modelo la vista y el controlador.
  */
 public class App {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
 
-        //Se crea el modelo
-        TiendaOnline modelo = new TiendaOnline();
-
-        //Añadir datos de prueba
-        modelo.cargarDatosDePrueba();
+        TiendaOnline modelo = new TiendaOnline(); // sin pasar DAOs
 
         //Se crea la vista
         Vista vista = new Vista();
@@ -28,3 +25,7 @@ public class App {
     }
 
 }
+/**
+ * En DAOImpl se debe añadir catch después del try?? y añadir finally después para cerrar la conexión con .close() en un try y catch
+ * en los metodos DAO de lectura se debe añadir los procedimientos almacenados?? ej: conn.prepareStatement("{CALL sp_getClientesEstandar()}"))
+ */

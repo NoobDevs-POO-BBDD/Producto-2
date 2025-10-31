@@ -23,7 +23,7 @@ public class Vista {
         this.controlador = controlador;
     }
 
-    public void menu(){
+    public void menu() throws Exception {
         boolean salir = false;
 
         int opcion;
@@ -79,7 +79,7 @@ public class Vista {
      * true 0 false si es premium, así se puede añadir la cuota y el descuento. Además se muestra el listado de todos
      * los clientes, listado clientes estándar, listado clientes prémium.
      */
-    public void gestionarClientes(){
+    public void gestionarClientes() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo cliente");
         System.out.println("2. Mostrar todos los clientes");
@@ -117,7 +117,7 @@ public class Vista {
      * En esta función se solicita al usuário si desea añadir nuevo artículo, mostrar todos los artículos o buscar un artículo por código.
      * el controlador recibe una función con los campos necesarios para realizarla.
      */
-    public void gestionarArticulos(){
+    public void gestionarArticulos() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo artículo");
         System.out.println("2. Mostrar artículos");
@@ -139,7 +139,7 @@ public class Vista {
                 break;
 
             case 2:
-                controlador.solicitarMostrarArticulos();
+                controlador.solicitarMostrarArticulos ();
                 break;
 
             case 3:
@@ -155,7 +155,7 @@ public class Vista {
      * Esta función gestiona los pedidos, añade un nuevo pedido (sin solicitar fecha ni estado), elimina pedidos con el
      * nuemro de pedido, muestra los pedidos pendientes y los pedidos enviados.
      */
-    public void gestionarPedidos(){
+    public void gestionarPedidos() throws Exception {
         System.out.println("\n ¿Qué acción deseas realizar?: ");
         System.out.println("1. Añadir nuevo pedido");
         System.out.println("2. Eliminar pedido");
@@ -451,6 +451,7 @@ public class Vista {
             }
         }
     }
+
 
 
 }
